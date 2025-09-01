@@ -79,45 +79,46 @@ npm install
 npm start
 
 ###  System Architecture
-```
+``` BASH
 Frontend (React/Next.js)  <-->  Backend API (Django REST)  <-->  AI Layer (Google Vertex AI)
                                       |
                                       v
                                PostgreSQL Database
 ```
-🚦 Agile Development Workflow
 
-Requirement Gathering & SRS
+## 🚦 Agile Development Workflow
 
-System Design & Architecture
+1. Requirement Gathering & SRS
 
-Feature Implementation (Sprint-based)
+2. System Design & Architecture
 
-Testing (Unit, Integration, UAT)
+3. Feature Implementation (Sprint-based)
 
-Deployment on Google Cloud
+4. Testing (Unit, Integration, UAT)
 
-Feedback & Iteration
+5. Deployment on Google Cloud
 
-📌 Roadmap
+6. Feedback & Iteration
 
- Define problem & requirements
+## 📌 Roadmap
 
- Create system architecture & SRS
+ 1. Define problem & requirements
 
- Build student profiling module
+ 2. Create system architecture & SRS
 
- Integrate Google Generative AI for recommendations
+ 3. Build student profiling module
 
- Implement skill-gap analysis engine
+ 4. Integrate Google Generative AI for recommendations
 
- Develop frontend dashboard & chatbot
+ 5. Implement skill-gap analysis engine
 
- Deploy MVP on Google Cloud
+ 6. Develop frontend dashboard & chatbot
 
- Add advanced features (mentor connect, multilingual support)
+ 7. Deploy MVP on Google Cloud
 
-🤝 Contributing
+ 8. Add advanced features (mentor connect, multilingual support)
+
+## 🤝 Contributing
 
 Contributions are welcome!
 
@@ -129,27 +130,7 @@ Commit changes and push
 
 Submit a Pull Request
 
-📄 License
+## 📄 License
 
 This project is licensed under the MIT License – see the LICENSE
  file for details.
-
-👥 Team
-
-Your Name – Project Lead
-
-Team Member 2 – Backend Developer
-
-Team Member 3 – AI/ML Engineer
-
-Team Member 4 – Frontend Developer
-
-🌟 Acknowledgments
-
-Google Cloud GenAI (Vertex AI, PaLM APIs)
-
-OpenAI, Scikit-learn, TensorFlow
-
-Career guidance research papers & datasets
-
----
