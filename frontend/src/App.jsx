@@ -1,35 +1,43 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState } from "react";
+import { login, register, logout, auth } from "./firebase";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleRegister = async () => {
+    await register(email, password);
+    alert("User registered!");
+  };
+
+  const handleLogin = async () => {
+    await login(email, password);
+    const token = await auth.currentUser.getIdToken();
+    console.log("Firebase Token:", token);
+
+    // Call Python backend
+    const res = await fetch("http://127.0.0.1:8000/protected", {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    const data = await res.json();
+    console.log(data);
+    alert(JSON.stringify(data));
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div>
+      <h2>Next-Step Auth Test</h2>
+      <input placeholder="Email" onChange={(e) => setEmail(e.target.value)} />
+      <input
+        type="password"
+        placeholder="Password"
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <button onClick={handleRegister}>Register</button>
+      <button onClick={handleLogin}>Login</button>
+      <button onClick={logout}>Logout</button>
+    </div>
+  );
 }
 
-export default App
+export default App;
