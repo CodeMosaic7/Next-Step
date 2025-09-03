@@ -2,8 +2,8 @@ from fastapi import FastAPI, Depends, HTTPException, Header
 import firebase_admin
 from firebase_admin import credentials, auth
 import os
-import dotenv
-
+from dotenv import load_dotenv
+load_dotenv()
 app = FastAPI(title="Next-Step Backend")
 
 # Initialize Firebase Admin
