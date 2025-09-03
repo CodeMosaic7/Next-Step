@@ -10,9 +10,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "autoprefixer": "^10.4.21",
     "firebase": "^12.2.1",
+    "lucide-react": "^0.542.0",
+    "postcss": "^8.5.6",
     "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "react-dom": "^19.1.1",
+    "react-router-dom": "^7.8.2",
+    "tailwindcss": "^2.2.19"
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",

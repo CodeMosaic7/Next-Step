@@ -1,4 +1,4 @@
-                                                                                                                                        // Import the functions you need from the SDKs you need
+                                                                                                                                       // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { 
   getAuth, 
@@ -11,12 +11,12 @@ import { getFirestore } from 'firebase/firestore';
 
 // Firebase configuration
 const firebaseConfig = {
-  apiKey: import.meta.env.API_KEY,
-  authDomain: import.meta.env.AUTH_DOMAIN,
-  projectId: import.meta.env.PROJECT_ID,
-  storageBucket: import.meta.env.STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.MESSAGING_SENDER_ID,
-  appId: import.meta.env.APP_ID,
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGE_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
 // Check if all required config values are present
@@ -25,7 +25,7 @@ const missingFields = requiredFields.filter(field => !firebaseConfig[field]);
 
 if (missingFields.length > 0) {
   console.error("Missing Firebase configuration fields:", missingFields);
-  console.error("Make sure your .env file has all REACT_APP_ prefixed variables");
+  // console.error("Make sure your .env file has all REACT_APP_ prefixed variables");
 }
 
 // Initialize Firebase
