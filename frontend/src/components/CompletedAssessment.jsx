@@ -1,4 +1,7 @@
-const CompletedAssessments = () => {
+import { ChevronRight } from "lucide-react";
+import ListItem from "./ListItem";
+
+const CompletedAssessment = () => {
   const assessments = [
     {
       title: "Career Personality Match",
@@ -37,3 +40,5 @@ const CompletedAssessments = () => {
     </div>
   );
 };
+
+export default CompletedAssessment;

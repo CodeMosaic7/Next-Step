@@ -1,3 +1,11 @@
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+import ProfileCard from "../components/ProfileCard";
+import SavedCareers from "../components/SavedCareers";
+import CareerGoalTracker from "../components/CareerGoalTracker";
+import CompletedAssessment from "../components/CompletedAssessment";
+import AchievementsBadges from "../components/AchievementsBadges";
+
 const Dashboard = () => {
   return (
     <div className="min-h-screen bg-gray-50">
@@ -10,7 +18,7 @@ const Dashboard = () => {
             <ProfileCard />
             <SavedCareers />
           </div>
-          
+
           {/* Middle Column */}
           <div className="space-y-6">
             <CareerGoalTracker />
@@ -18,7 +26,7 @@ const Dashboard = () => {
           
           {/* Right Column */}
           <div className="space-y-6">
-            <CompletedAssessments />
+            <CompletedAssessment />
           </div>
         </div>
         

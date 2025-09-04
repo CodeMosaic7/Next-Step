@@ -1,3 +1,4 @@
+import BadgeCard from "./BadgeCard";
 const AchievementsBadges = () => {
   const badges = [
     { type: 'Explorer', description: 'Completed your career assessment' },

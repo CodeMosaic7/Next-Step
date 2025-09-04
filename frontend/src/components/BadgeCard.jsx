@@ -19,3 +19,5 @@ const BadgeCard = ({ badge }) => {
     </div>
   );
 };
+
+export default BadgeCard;

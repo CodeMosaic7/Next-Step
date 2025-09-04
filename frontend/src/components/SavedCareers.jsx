@@ -1,3 +1,6 @@
+import {ChevronRight} from "lucide-react";
+import ListItem from "./ListItem";
+
 const SavedCareers = () => {
   const careers = [
     {
@@ -37,3 +40,5 @@ const SavedCareers = () => {
     </div>
   );
 };
+
+export default SavedCareers;

@@ -32,3 +32,5 @@ const CareerGoalTracker = () => {
     </div>
   );
 };
+
+export default CareerGoalTracker;

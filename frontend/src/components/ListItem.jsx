@@ -1,3 +1,5 @@
+import { ChevronRight } from "lucide-react";
+
 const ListItem = ({ title, description, showChevron = false }) => {
   return (
     <div className="flex items-center justify-between py-3 border-b border-gray-100 last:border-b-0">
