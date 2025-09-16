@@ -80,7 +80,7 @@ npm start
 
 ###  System Architecture
 ``` BASH
-Frontend (React/Next.js)  <-->  Backend API (Django REST)  <-->  AI Layer (Google Vertex AI)
+Frontend (React)  <-->  Backend(FastAPI)  <-->  AI Layer (Google Vertex AI)
                                       |
                                       v
                                PostgreSQL Database
