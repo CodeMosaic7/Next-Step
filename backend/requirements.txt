@@ -1,2 +1,5 @@
 firebase-admin
 dotenv
+Langchain
+Langgraph
+langchain[google-genai]
