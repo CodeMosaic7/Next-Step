@@ -1,0 +1,122 @@
+[
+  {
+    "session_id": "assessment_20250917_144652",
+    "assessment_date": "2025-09-17T14:47:04.352669",
+    "psychological_profile": {
+      "skills": [
+        "analytical thinking",
+        "communication"
+      ],
+      "personality_traits": [
+        "conscientious",
+        "open"
+      ],
+      "iq_indicators": [
+        "high reasoning"
+      ],
+      "cognitive_abilities": [
+        "working memory"
+      ],
+      "emotional_intelligence": [
+        "empathy"
+      ],
+      "behavioral_patterns": [
+        "collaborative"
+      ],
+      "strengths": [
+        "leadership"
+      ],
+      "areas_for_improvement": [
+        "time management"
+      ],
+      "risk_factors": [],
+      "recommendations": [
+        "continue development"
+      ],
+      "confidence_score": 0.85,
+      "assessment_date": "2025-09-17T14:47:04.352553",
+      "session_id": "assessment_20250917_144652"
+    },
+    "feedback_log": [
+      {
+        "timestamp": "2025-09-17T14:47:04.352196",
+        "category": "error",
+        "observation": "Skills analysis failed: Unexpected message type: 'psychologist'. Use one of 'human', 'user', 'ai', 'assistant', 'function', 'tool', 'system', or 'developer'.\nFor troubleshooting, visit: https://python.langchain.com/docs/troubleshooting/errors/MESSAGE_COERCION_FAILURE ",
+        "recommendation": "Require manual review",
+        "severity": "high",
+        "follow_up_required": true
+      }
+    ],
+    "session_notes": [
+      "Assessment session assessment_20250917_144652 initiated",
+      "Skills Analysis: 10 skills identified"
+    ],
+    "red_flags": [],
+    "participant_info": {
+      "age": 28,
+      "education": "Bachelor's in Psychology",
+      "occupation": "Mental Health Counselor",
+      "assessment_reason": "Career development"
+    }
+  },
+  {
+    "session_id": "assessment_20250917_144748",
+    "assessment_date": "2025-09-17T14:48:03.340463",
+    "psychological_profile": {
+      "skills": [
+        "analytical thinking",
+        "communication"
+      ],
+      "personality_traits": [
+        "conscientious",
+        "open"
+      ],
+      "iq_indicators": [
+        "high reasoning"
+      ],
+      "cognitive_abilities": [
+        "working memory"
+      ],
+      "emotional_intelligence": [
+        "empathy"
+      ],
+      "behavioral_patterns": [
+        "collaborative"
+      ],
+      "strengths": [
+        "leadership"
+      ],
+      "areas_for_improvement": [
+        "time management"
+      ],
+      "risk_factors": [],
+      "recommendations": [
+        "continue development"
+      ],
+      "confidence_score": 0.85,
+      "assessment_date": "2025-09-17T14:48:03.340339",
+      "session_id": "assessment_20250917_144748"
+    },
+    "feedback_log": [
+      {
+        "timestamp": "2025-09-17T14:48:03.340068",
+        "category": "error",
+        "observation": "Skills analysis failed: Unexpected message type: 'psychologist'. Use one of 'human', 'user', 'ai', 'assistant', 'function', 'tool', 'system', or 'developer'.\nFor troubleshooting, visit: https://python.langchain.com/docs/troubleshooting/errors/MESSAGE_COERCION_FAILURE ",
+        "recommendation": "Require manual review",
+        "severity": "high",
+        "follow_up_required": true
+      }
+    ],
+    "session_notes": [
+      "Assessment session assessment_20250917_144748 initiated",
+      "Skills Analysis: 10 skills identified"
+    ],
+    "red_flags": [],
+    "participant_info": {
+      "age": 28,
+      "education": "Bachelor's in Psychology",
+      "occupation": "Mental Health Counselor",
+      "assessment_reason": "Career development"
+    }
+  }
+]

@@ -1,11 +1,9 @@
-                                                                                                         // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { 
   getAuth, 
   createUserWithEmailAndPassword, 
   signInWithEmailAndPassword, 
   signOut,
-  onAuthStateChanged 
 } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
@@ -25,23 +23,17 @@ const missingFields = requiredFields.filter(field => !firebaseConfig[field]);
 
 if (missingFields.length > 0) {
   console.error("Missing Firebase configuration fields:", missingFields);
-  // console.error("Make sure your .env file has all REACT_APP_ prefixed variables");
 }
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-
-// Initialize Firebase Authentication
 export const auth = getAuth(app);
-
-// Initialize Firestore
 export const db = getFirestore(app);
 
-// Authentication functions
 export const register = async (email, password) => {
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    return userCredential.user;
+    const token=await userCredential.user.getIdToken()
+    return token;
   } catch (error) {
     console.error("Registration error:", error.message);
     throw error;
@@ -51,7 +43,8 @@ export const register = async (email, password) => {
 export const login = async (email, password) => {
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    return userCredential.user;
+    const token=await userCredential.user.getIdToken()
+    return token;
   } catch (error) {
     console.error("Login error:", error.message);
     throw error;
