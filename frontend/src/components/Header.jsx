@@ -1,7 +1,6 @@
 import React from 'react';
 import { User, Target, Users, BookOpen } from 'lucide-react';
 
-// Header Component
 const Header = () => {
   return (
     <header className="bg-white shadow-sm">
@@ -11,12 +10,12 @@ const Header = () => {
             <div className="text-2xl font-bold text-blue-600">NextStep</div>
           </div>
           <div className="hidden md:flex space-x-8">
-            <a href="#" className="text-gray-700 hover:text-blue-600">Home</a>
-            <a href="#" className="text-gray-700 hover:text-blue-600">Assessment</a>
-            <a href="#" className="text-gray-700 hover:text-blue-600">Careers</a>
-            <a href="#" className="text-gray-700 hover:text-blue-600">Mentors</a>
-            <a href="#" className="text-gray-700 hover:text-blue-600">Resources</a>
-            <a href="#" className="text-gray-700 hover:text-blue-600">Profile</a>
+            <a href="/home" className="text-gray-700 hover:text-blue-600">Home</a>
+            <a href="/assessment" className="text-gray-700 hover:text-blue-600">Assessment</a>
+            <a href="/career-dashboard" className="text-gray-700 hover:text-blue-600">Careers</a>
+            <a href="/mentors" className="text-gray-700 hover:text-blue-600">Mentors</a>
+            <a href="/resources" className="text-gray-700 hover:text-blue-600">Resources</a>
+            <a href="/dashboard" className="text-gray-700 hover:text-blue-600">Profile</a>
           </div>
         </div>
       </nav>
