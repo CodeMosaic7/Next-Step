@@ -3,9 +3,11 @@ import datetime
 import os
 from dotenv import load_dotenv
 from firebase_admin import firestore
+from database.primary_db import init_db
 from firebase_setup import fb_verify_token
 from pydantic_schema import RegistrationData
-from database.db_dependies import 
+from database.db_dependies import get_db
+
 load_dotenv()
 
 db=firestore.client()
