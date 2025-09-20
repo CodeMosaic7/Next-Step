@@ -1,15 +1,28 @@
 from fastapi import FastAPI, Depends,HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 import datetime
 import os
 from dotenv import load_dotenv
 from firebase_admin import firestore
+from database.primary_db import init_db
 from firebase_setup import fb_verify_token
 from pydantic_schema import RegistrationData
-from database.db_dependies import 
+from database.db_dependies import get_db
+
 load_dotenv()
+
+origins=['http://localhost:5173']
 
 db=firestore.client()
 app = FastAPI(title="Next-Step Backend")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,         # who can talk to your backend
+    allow_credentials=True,        # allow cookies/auth
+    allow_methods=["*"],           # allow all HTTP methods (GET, POST, PUT, DELETE, etc.)
+    allow_headers=["*"],           # allow all headers (like Authorization)
+)
 
 @app.get("/")
 def read_root():

@@ -1,11 +1,10 @@
-# REVIEW
 import uuid
 from datetime import datetime, date
 from sqlalchemy import (
     Column, String, DateTime, Boolean, Enum, ForeignKey,
     Integer, Text, Date, UniqueConstraint, Index, Float
 )
-from sqlalchemy.dialects.postgresql import UUID, JSONB
+from sqlalchemy.dialects.postgresql import UUID, JSON
 from sqlalchemy.orm import relationship, declarative_base
 
 Base = declarative_base()
@@ -25,7 +24,7 @@ class User(Base):
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     last_login = Column(DateTime, index=True)
     created_by_ip = Column(String)
-    metadata = Column(JSONB, default={})
+    meta_data = Column(JSON, default={})
 
     # Relationships
     profiles = relationship("UserProfile", back_populates="user", cascade="all, delete-orphan")
@@ -50,9 +49,9 @@ class UserProfile(Base):
     years_of_experience = Column(Integer, default=0)
     location = Column(String)
     bio = Column(Text)
-    interests = Column(JSONB, default=[])
+    interests = Column(JSON, default=[])
     career_goals = Column(Text)
-    preferred_industries = Column(JSONB, default=[])
+    preferred_industries = Column(JSON, default=[])
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
@@ -66,7 +65,7 @@ class Role(Base):
     role_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     role_name = Column(Enum("admin", "mentor", "mentee", "career_counselor", "guest", name="role_name"), unique=True, nullable=False)
     description = Column(Text)
-    permissions = Column(JSONB, default=[])
+    permissions = Column(JSON, default=[])
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
@@ -98,7 +97,7 @@ class Skills(Base):
     skill_name = Column(String, unique=True, nullable=False)
     category = Column(String, nullable=False)  # technical, soft, domain-specific
     description = Column(Text)
-    industry_relevance = Column(JSONB, default=[])  # Industries where this skill is valuable
+    industry_relevance = Column(JSON, default=[])  # Industries where this skill is valuable
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
@@ -141,7 +140,7 @@ class LearningResources(Base):
     estimated_duration = Column(Integer)  # in minutes
     rating = Column(Float)
     cost_type = Column(Enum("free", "paid", "subscription", name="cost_type"), default="free")
-    tags = Column(JSONB, default=[])
+    tags = Column(JSON, default=[])
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
@@ -155,10 +154,10 @@ class PsychometricTest(Base):
     test_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.user_id"), nullable=False, index=True)
     test_type = Column(Enum("MBTI", "DISC", "Big Five", "Career Interest", "Learning Style", name="test_type"), nullable=False)
-    results = Column(JSONB, nullable=False)
-    personality_traits = Column(JSONB, default={})
-    career_preferences = Column(JSONB, default={})
-    learning_preferences = Column(JSONB, default={})
+    results = Column(JSON, nullable=False)
+    personality_traits = Column(JSON, default={})
+    career_preferences = Column(JSON, default={})
+    learning_preferences = Column(JSON, default={})
     completion_score = Column(Float, default=0.0)  # Gamification score
     time_taken = Column(Integer)  # in minutes
     taken_at = Column(DateTime, default=datetime.utcnow, index=True)
@@ -177,11 +176,11 @@ class CareerPath(Base):
     title = Column(String, nullable=False)
     description = Column(Text)
     industry = Column(String, nullable=False)
-    required_skills = Column(JSONB, default=[])  # List of skill IDs
-    preferred_personality_traits = Column(JSONB, default={})
-    salary_range = Column(JSONB, default={})  # min, max, currency
+    required_skills = Column(JSON, default=[])  # List of skill IDs
+    preferred_personality_traits = Column(JSON, default={})
+    salary_range = Column(JSON, default={})  # min, max, currency
     growth_prospects = Column(String)
-    education_requirements = Column(JSONB, default=[])
+    education_requirements = Column(JSON, default=[])
     experience_requirements = Column(String)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -197,8 +196,8 @@ class CareerRecommendation(Base):
     career_path_id = Column(UUID(as_uuid=True), ForeignKey("career_paths.path_id"), nullable=False)
     match_score = Column(Float, nullable=False)  # 0.0 to 1.0
     reasoning = Column(Text)  # AI-generated explanation
-    skill_gap_analysis = Column(JSONB, default={})
-    recommended_actions = Column(JSONB, default=[])
+    skill_gap_analysis = Column(JSON, default={})
+    recommended_actions = Column(JSON, default=[])
     priority_level = Column(Enum("high", "medium", "low", name="priority_level"), default="medium")
     is_viewed = Column(Boolean, default=False)
     is_bookmarked = Column(Boolean, default=False)
@@ -240,8 +239,8 @@ class Milestone(Base):
     description = Column(Text)
     order_sequence = Column(Integer, nullable=False)
     estimated_duration = Column(Integer)  # in weeks
-    required_skills = Column(JSONB, default=[])
-    learning_resources = Column(JSONB, default=[])
+    required_skills = Column(JSON, default=[])
+    learning_resources = Column(JSON, default=[])
     success_criteria = Column(Text)
     status = Column(Enum("not_started", "in_progress", "completed", "skipped", name="milestone_status"), default="not_started")
     completion_date = Column(DateTime, nullable=True)
@@ -283,7 +282,7 @@ class AssessmentQuestion(Base):
     assessment_id = Column(UUID(as_uuid=True), ForeignKey("assessments.assessment_id"), nullable=False, index=True)
     question_text = Column(Text, nullable=False)
     question_type = Column(Enum("multiple_choice", "true_false", "short_answer", "coding", name="question_type"), default="multiple_choice")
-    options = Column(JSONB, default=[])  # For multiple choice questions
+    options = Column(JSON, default=[])  # For multiple choice questions
     correct_answer = Column(Text, nullable=False)
     user_answer = Column(Text)
     points = Column(Integer, nullable=False)
@@ -330,8 +329,8 @@ class GamificationProfile(Base):
     total_points = Column(Integer, default=0)
     current_level = Column(Integer, default=1)
     experience_points = Column(Integer, default=0)
-    badges_earned = Column(JSONB, default=[])
-    achievements_unlocked = Column(JSONB, default=[])
+    badges_earned = Column(JSON, default=[])
+    achievements_unlocked = Column(JSON, default=[])
     streak_days = Column(Integer, default=0)
     last_activity_date = Column(Date, default=date.today)
     created_at = Column(DateTime, default=datetime.utcnow)
@@ -349,7 +348,7 @@ class Badge(Base):
     icon_url = Column(String)
     category = Column(Enum("skill", "assessment", "mentorship", "completion", "streak", name="badge_category"))
     points_required = Column(Integer, default=0)
-    criteria = Column(JSONB, default={})
+    criteria = Column(JSON, default={})
     rarity = Column(Enum("common", "uncommon", "rare", "epic", "legendary", name="badge_rarity"), default="common")
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime, default=datetime.utcnow)
@@ -380,7 +379,7 @@ class AgentInteraction(Base):
     interaction_type = Column(Enum("chat", "recommendation", "assessment", "guidance", name="interaction_type"))
     user_message = Column(Text)
     agent_response = Column(Text)
-    context_data = Column(JSONB, default={})
+    context_data = Column(JSON, default={})
     satisfaction_rating = Column(Integer)  # 1-5 stars
     session_token = Column(String)
     created_at = Column(DateTime, default=datetime.utcnow, index=True)

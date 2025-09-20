@@ -10,7 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@headlessui/react": "^2.2.8",
+    "@heroicons/react": "^2.2.0",
     "autoprefixer": "^10.4.21",
+    "axios": "^1.12.2",
     "firebase": "^12.2.1",
     "lucide-react": "^0.542.0",
     "postcss": "^8.5.6",
