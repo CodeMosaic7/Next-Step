@@ -8,6 +8,7 @@ import MentorBoard from "./pages/MentorBoard";
 import Resources from './pages/Resources';
 import Dashboard from './pages/Dashboard';
 import Chatbot from './pages/Chatbot';
+import RegistrationForm from './pages/RegistrationForm';
 
 const App = () => {
   return (
@@ -20,6 +21,8 @@ const App = () => {
       <Route path="/resources" element={<Resources />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/chatbot" element={<Chatbot />} />
+      <Route path="/registration" element={<RegistrationForm />} />
+
     </Routes>
   )
 }
