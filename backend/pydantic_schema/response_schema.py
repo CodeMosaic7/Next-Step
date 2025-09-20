@@ -1,3 +1,12 @@
+from datetime import datetime,date
+from pydantic import BaseModel,EmailStr,Field
+from typing import Optional,List,Dict,Any
+from uuid import UUID
+
+from .core import UserProfileBase,UserSkillBase,SkillBase,PsychometricTestBase
+from .Enums import AssessmentType,PriorityLevelEnum,ProficiencyLevelEnum,RoadmapStatusEnum,MilestoneStatusEnum,AgentTypeEnum,InteractionTypeEnum,BadgeCategoryEnum,BadgeRarityEnum
+
+
 class UserResponse(BaseModel):
     """User response"""
     user_id: UUID
@@ -60,7 +69,7 @@ class AssessmentResponse(BaseModel):
     assessment_id: UUID
     user_id: UUID
     user_skill_id: UUID
-    assessment_type: AssessmentTypeEnum
+    assessment_type: AssessmentType
     score: int
     max_score: int
     percentage: float

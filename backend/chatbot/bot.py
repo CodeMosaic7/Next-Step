@@ -27,6 +27,7 @@ import pinecone
 from pydantic import BaseModel, Field
 from pydantic_schema.Enums import QuestionType,AssessmentType
 from database.vector_db import VectorDatabase
+from agents.main import CoordinatorSystem
 
 from .Questions import PERSONALITY_QUESTIONS,PSYCHOMETRIC_QUESTIONS,APTITUDE_QUESTIONS
 
@@ -298,7 +299,7 @@ def process_answer(state: AssessmentState) -> AssessmentState:
     
     return state
 
-def generate_report(state: AssessmentState) -> AssessmentState:
+async def generate_report(state: AssessmentState) -> AssessmentState:
     """Generate the final assessment report"""
     print("Generating assessment report")
     
@@ -335,10 +336,20 @@ def generate_report(state: AssessmentState) -> AssessmentState:
     state.report = report
     state.current_step = "report_generated"
     state.messages.append(AIMessage(content="Your assessment report has been generated and sent to the coordinator agent."))
+
+    coordinator_system = CoordinatorSystem()
+    comprehensive_report = await coordinator_system.process_assessment_report(
+        user_id=state.user_id,
+        assessment_report=report,
+        assessment_type=state.assessment_type
+    )
+    
+    state.messages.append(AIMessage(content="Your comprehensive consultation report has been generated with psychological and career guidance."))
+    state.comprehensive_consultation = comprehensive_report
     
     return state
 
-def should_continue(state: AssessmentState) -> Literal["ask_next_question", "process_answer", "generate_report", END]:
+def should_continue(state: AssessmentState) -> Literal["ask_next_question", "process_answer", "generate_report",END]:
     """Determine next step in the workflow"""
     print(f"Should continue check - Step: {state.current_step}, Question: {state.current_question_index}/{len(state.questions)}, Completed: {state.is_completed}")
     

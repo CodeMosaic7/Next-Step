@@ -105,3 +105,13 @@ class AssessmentType(str, Enum):
     PSYCHOMETRIC = "psychometric"
     APTITUDE = "aptitude"
     PERSONALITY = "personality"
+
+class SupportType(Enum):
+    MENTAL_HEALTH = "mental_health"
+    CAREER_GUIDANCE = "career_guidance"
+    BOTH = "both"
+
+class ConsultationStatus(Enum):
+    PENDING = "pending"
+    IN_PROGRESS = "in_progress"
+    COMPLETED = "completed"
