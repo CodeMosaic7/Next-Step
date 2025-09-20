@@ -48,10 +48,6 @@ class MilestoneStatusEnum(str, Enum):
     COMPLETED = "completed"
     SKIPPED = "skipped"
 
-class AssessmentTypeEnum(str, Enum):
-    SKILL_TEST = "skill_test"
-    PRACTICE_QUIZ = "practice_quiz"
-    CERTIFICATION = "certification"
 
 class QuestionTypeEnum(str, Enum):
     MULTIPLE_CHOICE = "multiple_choice"
@@ -97,3 +93,15 @@ class InteractionTypeEnum(str, Enum):
     RECOMMENDATION = "recommendation"
     ASSESSMENT = "assessment"
     GUIDANCE = "guidance"
+
+
+class QuestionType(str, Enum):
+    MULTIPLE_CHOICE = "multiple_choice"
+    LIKERT_SCALE = "likert_scale"
+    TRUE_FALSE = "true_false"
+    OPEN_ENDED = "open_ended"
+
+class AssessmentType(str, Enum):
+    PSYCHOMETRIC = "psychometric"
+    APTITUDE = "aptitude"
+    PERSONALITY = "personality"
