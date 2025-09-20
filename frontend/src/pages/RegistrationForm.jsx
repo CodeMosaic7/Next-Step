@@ -37,23 +37,17 @@ function RegistrationForm() {
     try {
       setLoading(true);
       setMessage("");
-
-      // Check if user is authenticated
       if (!auth.currentUser) {
         setMessage("❌ Please sign in first to complete registration");
         return;
       }
-
-      // Get Firebase ID token
       const token = await auth.currentUser.getIdToken();
-
-      // Prepare registration data
       const registrationData = {
         ...formData,
         age: parseInt(formData.age)
       };
 
-      // Submit registration
+      
       const response = await axios.post(`${API_BASE_URL}/registration`, registrationData, {
         headers: {
           'Authorization': `Bearer ${token}`,
