@@ -6,9 +6,14 @@ from uuid import UUID
 from datetime import date,datetime
 
 class UserRegistrationRequest(UserBase):
-    """Initial user registration - minimal info"""
+    """Initial user registration - minimal info + profile fields"""
     firebase_uid: str = Field(..., min_length=1)
     password: Optional[str] = Field(None, min_length=8)
+    
+    # Add profile fields here
+    age: Optional[int] = Field(None, ge=13, le=100)
+    education_level: Optional[str] = None
+    current_occupation: Optional[str] = None
     
     class Config:
         schema_extra = {
@@ -16,7 +21,10 @@ class UserRegistrationRequest(UserBase):
                 "firebase_uid": "firebase_uid_123",
                 "email": "student@example.com",
                 "display_name": "John Doe",
-                "phone_number": "+1234567890"
+                "phone_number": "+1234567890",
+                "age": 25,
+                "education_level": "Bachelor's",
+                "current_occupation": "Software Engineer"
             }
         }
 

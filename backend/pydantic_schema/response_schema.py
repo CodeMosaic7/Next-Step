@@ -199,7 +199,7 @@ class UserDashboardResponse(BaseModel):
     recent_assessments: List[AssessmentResponse]
     active_roadmaps: List[RoadmapResponse]
     career_recommendations: List[CareerRecommendationResponse]
-    gamification: GamificationProfileResponse
+    gamification: Optional[GamificationProfileResponse] = None
     recent_interactions: List[AgentInteractionResponse]
 
 class PsychologistAnalysisResponse(BaseModel):

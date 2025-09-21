@@ -100,7 +100,7 @@ def check_user_profile_completion(user: User, db_session: Session):
     is_complete = len(missing_fields) == 0
     return is_complete, profile
 
-@app.get("/protected")
+@app.get("/protected") #works
 def protected_route(
     user_data: dict = Depends(fb_verify_token),
     db_session: Session = Depends(get_db)
@@ -161,7 +161,7 @@ def protected_route(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error processing user data: {str(e)}")
 
-@app.post("/registration", response_model=UserDashboardResponse)
+@app.post("/registration", response_model=UserDashboardResponse) #works
 def register_route(
     registration_data: UserRegistrationRequest,
     user_data: dict = Depends(fb_verify_token),
@@ -424,7 +424,7 @@ def create_user_profile(
         user = get_or_create_user(user_data, db_session)
         
         # Check if profile already exists
-        existing_profile = user.profile
+        existing_profile = user.profile[0] if user.profiles else None
         
         if existing_profile:
             raise HTTPException(status_code=400, detail="Profile already exists. Use PUT to update.")
@@ -482,8 +482,7 @@ def update_user_profile(
     """
     try:
         user = get_or_create_user(user_data, db_session)
-        profile = user.profile
-        
+        profile = user.profile[0] if user.profiles else None        
         if not profile:
             raise HTTPException(status_code=404, detail="Profile not found. Create profile first.")
         
@@ -529,8 +528,7 @@ def get_user_dashboard(
     """
     try:
         user = get_or_create_user(user_data, db_session)
-        profile = user.profile
-        
+        profile = user.profiles[0] if user.profiles else None        
         # Create user response
         user_response = UserResponse(
             user_id=user.user_id,
