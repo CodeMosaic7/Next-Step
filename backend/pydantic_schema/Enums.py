@@ -115,3 +115,8 @@ class ConsultationStatus(Enum):
     PENDING = "pending"
     IN_PROGRESS = "in_progress"
     COMPLETED = "completed"
+
+class AssessmentTypeEnum(str, Enum):
+    SKILL_TEST = "skill_test"
+    PRACTICE_QUIZ = "practice_quiz"
+    CERTIFICATION = "certification"

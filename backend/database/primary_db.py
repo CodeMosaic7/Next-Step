@@ -1,8 +1,12 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+import logging
 from models.career_model import Base
 import os
 from dotenv import load_dotenv
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 load_dotenv()
 
@@ -18,3 +22,25 @@ primary_engine = create_engine(
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=primary_engine)
 def init_db():
     Base.metadata.create_all(bind=primary_engine)
+
+def reset_db():
+    """Drop and recreate all tables - USE CAREFULLY"""
+    try:
+        Base.metadata.drop_all(bind=primary_engine)
+        Base.metadata.create_all(bind=primary_engine)
+        logger.info("Database reset successfully")
+    except Exception as e:
+        logger.error(f"Error resetting database: {e}")
+        raise
+
+def check_db_connection():
+    """Check if database connection is working"""
+    try:
+        db = SessionLocal()
+        db.execute("SELECT 1")
+        db.close()
+        logger.info("Database connection is working")
+        return True
+    except Exception as e:
+        logger.error(f"Database connection failed: {e}")
+        return False

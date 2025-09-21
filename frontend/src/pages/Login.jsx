@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { login, register, logout, auth } from "../firebase";
 import axios from "axios";
 
@@ -8,7 +8,6 @@ function Login() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
-  // API base URL - consider moving to environment variable
   const API_BASE_URL = import.meta.env.VITE_APP_API_URL || "http://127.0.0.1:8000";
 
   const handleRegister = async () => {
@@ -52,9 +51,8 @@ function Login() {
       
       console.log("Backend Response:", response.data);
       setMessage(`✅ Login successful! Welcome ${response.data.user}`);
-      
-      // Optional: Store token or user data in localStorage/context
-      // localStorage.setItem('authToken', token);
+      localStorage.setItem('authToken', token);
+      // Add logic that if user is registered it directs to /Dashboard else to /register
       
     } catch (err) {
       console.error("Login error:", err);

@@ -10,6 +10,34 @@ from .Psychologist_agent import PsychologistAgent
 from llm.gemini_llm import LLM_initialise
 from pydantic_schema.Enums import AssessmentType,SupportType,ConsultationStatus
 
+class CoordinatorState(BaseModel):
+    """State for the coordinator agent"""
+    user_id: str
+    session_id: str
+    assessment_report: str
+    assessment_type: AssessmentType
+    
+    # Analysis results
+    psychologist_analysis: Optional[str] = None
+    counsellor_guidance: Optional[str] = None
+    
+    # Routing decisions
+    needs_mental_health_support: bool = False
+    needs_career_guidance: bool = False
+    support_priority: SupportType = SupportType.BOTH
+    
+    # Communication
+    messages: List[BaseMessage] = Field(default_factory=list)
+    current_step: str = "received_report"
+    consultation_status: ConsultationStatus = ConsultationStatus.PENDING
+    
+    # Final output
+    comprehensive_report: Optional[str] = None
+    recommendations: List[str] = Field(default_factory=list)
+
+
+
+
 class CoordinatorAgent:
     """Main coordinator that manages communication between specialized agents"""
     

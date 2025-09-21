@@ -1,7 +1,7 @@
-from pydantic import BaseModel
-from core import UserBase,UserProfileBase,PsychometricTestBase,AssessmentBase,UserSkillBase
-from typing import Field,Optional,List,Dict,Any
-from Enums import TestTypeEnum,ProficiencyLevelEnum,AssessmentTypeEnum,AgentTypeEnum,SessionTypeEnum,InteractionTypeEnum
+from pydantic import BaseModel,Field
+from .core import UserBase,UserProfileBase,PsychometricTestBase,AssessmentBase,UserSkillBase
+from typing import Optional,List,Dict,Any
+from .Enums import TestTypeEnum,ProficiencyLevelEnum,AssessmentTypeEnum,AgentTypeEnum,SessionTypeEnum,InteractionTypeEnum
 from uuid import UUID
 from datetime import date,datetime
 

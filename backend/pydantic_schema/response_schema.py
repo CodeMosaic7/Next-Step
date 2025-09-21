@@ -237,3 +237,9 @@ class CoordinatorResponse(BaseModel):
     priority_actions: List[Dict[str, Any]]
     success_metrics: Dict[str, Any]
     created_at: datetime
+
+class CompleteUserResponse(BaseModel):
+    user: UserResponse
+    profile: Optional[UserProfileResponse]
+    profile_status: Dict[str, bool]
+    registration_prompt: Optional[Dict[str, Any]] = None

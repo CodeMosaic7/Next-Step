@@ -27,7 +27,7 @@ from pydantic_schema.response_schema import (
 from pydantic_schema.Enums import AssessmentType, AgentTypeEnum
 
 # Import your coordinator system
-from agents.Coordinator_sgent import CoordinatorSystem
+from agents.main import CoordinatorSystem
 from agents.Database_service_layer import DatabaseService
 from auth.dependencies import get_current_user  # Assuming you have auth
 

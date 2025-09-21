@@ -60,3 +60,7 @@ Thumbs.db
 
 .pdf
 Questions.py
+
+alembic/
+*.ini
+

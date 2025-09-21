@@ -1,13 +1,47 @@
-from pydantic import BaseModel,field_validator,EmailStr
-from typing import Optional,Field,List,Dict,Any
+from pydantic import BaseModel,field_validator,EmailStr,Field
+from typing import Optional,List,Dict,Any
 from uuid import UUID
 
-from Enums import PriorityLevelEnum, ProficiencyLevelEnum,TestTypeEnum,AssessmentTypeEnum
+from .Enums import PriorityLevelEnum, ProficiencyLevelEnum,TestTypeEnum,AssessmentTypeEnum
+
+class RegistrationData(BaseModel):
+    """User registration data schema"""
+    name: str = Field(..., min_length=1, max_length=100)
+    age: int = Field(..., ge=13, le=100)
+    education_level: str = Field(..., min_length=1, max_length=100)
+    phone_no: str = Field(..., min_length=10, max_length=15)
+    
+    class Config:
+        schema_extra = {
+            "example": {
+                "name": "John Doe",
+                "age": 25,
+                "education_level": "Bachelor's Degree",
+                "phone_no": "+1234567890"
+            }
+        }
+
+
 
 class UserBase(BaseModel):
     email: EmailStr
     display_name: Optional[str] = None
     phone_number: Optional[str] = None
+
+class UserRegistrationRequest(UserBase):
+    """Initial user registration - minimal info"""
+    firebase_uid: str = Field(..., min_length=1)
+    password: Optional[str] = Field(None, min_length=8)
+    
+    class Config:
+        schema_extra = {
+            "example": {
+                "firebase_uid": "firebase_uid_123",
+                "email": "student@example.com",
+                "display_name": "John Doe",
+                "phone_number": "+1234567890"
+            }
+        }
 
 class UserProfileBase(BaseModel):
     age: Optional[int] = Field(None, ge=13, le=100)
@@ -50,6 +84,7 @@ class AssessmentBase(BaseModel):
         if 'max_score' in values and v > values['max_score']:
             raise ValueError('Score cannot exceed max_score')
         return v
+
 
 
 
