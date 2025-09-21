@@ -12,48 +12,63 @@ Base = declarative_base()
 # --- USERS ---
 class User(Base):
     __tablename__ = "users"
-
-    user_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    
+    user_id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
     firebase_uid = Column(String, unique=True, index=True, nullable=False)
     email = Column(String, unique=True, index=True, nullable=False)
     display_name = Column(String)
     phone_number = Column(String)
-    profile_picture_url = Column(String)
-    status = Column(Enum("active", "inactive", "suspended", "deleted", name="user_status"), default="active")
-    created_at = Column(DateTime, default=datetime.utcnow, index=True)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime, default=datetime.now, index=True)
+    updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
     last_login = Column(DateTime, index=True)
     created_by_ip = Column(String)
-    meta_data = Column(JSON, default={})
-
-    # Relationships
+    
+    meta_data = Column(JSON, default=lambda: {})
+    
     profiles = relationship("UserProfile", back_populates="user", cascade="all, delete-orphan")
     skills = relationship("UserSkills", back_populates="user", cascade="all, delete-orphan")
     user_roles = relationship("UserRole", back_populates="user", cascade="all, delete-orphan")
     psychometric_tests = relationship("PsychometricTest", back_populates="user", cascade="all, delete-orphan")
     roadmaps = relationship("Roadmap", back_populates="user", cascade="all, delete-orphan")
     assessments = relationship("Assessment", back_populates="user", cascade="all, delete-orphan")
-    mentorship_as_mentor = relationship("MentorshipSession", foreign_keys="MentorshipSession.mentor_id", back_populates="mentor")
-    mentorship_as_mentee = relationship("MentorshipSession", foreign_keys="MentorshipSession.mentee_id", back_populates="mentee")
     career_recommendations = relationship("CareerRecommendation", back_populates="user", cascade="all, delete-orphan")
     gamification_profile = relationship("GamificationProfile", back_populates="user", uselist=False, cascade="all, delete-orphan")
+
+    # Temporarily commented out to avoid mapper initialization errors
+    # mentorship_as_mentor = relationship(
+    #     "MentorshipSession",
+    #     back_populates="mentor",
+    #     foreign_keys="MentorshipSession.mentor_id",
+    #     cascade="all, delete-orphan"
+    # )
+    # mentorship_as_mentee = relationship(
+    #     "MentorshipSession",
+    #     back_populates="mentee",
+    #     foreign_keys="MentorshipSession.mentee_id",
+    #     cascade="all, delete-orphan"
+    # )
 
 class UserProfile(Base):
     __tablename__ = "user_profiles"
     
-    profile_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    user_id = Column(UUID(as_uuid=True), ForeignKey("users.user_id"), nullable=False, unique=True)
+    profile_id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    user_id = Column(String, ForeignKey("users.user_id"), nullable=False, unique=True)
     age = Column(Integer)
     education_level = Column(String)
     current_occupation = Column(String)
     years_of_experience = Column(Integer, default=0)
     location = Column(String)
     bio = Column(Text)
-    interests = Column(JSON, default=[])
+    
+    # JSON fields for SQLite (stored as text)
+    interests = Column(JSON, default=lambda: [])
     career_goals = Column(Text)
-    preferred_industries = Column(JSON, default=[])
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    preferred_industries = Column(JSON, default=lambda: [])
+    psychologist_report = Column(JSON, default=lambda: [])
+    counsellor_report = Column(JSON, default=lambda: [])
+    
+    created_at = Column(DateTime, default=datetime.now)
+    updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
     
     # Relationships
     user = relationship("User", back_populates="profiles")
@@ -63,31 +78,34 @@ class Role(Base):
     __tablename__ = "roles"
 
     role_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    role_name = Column(Enum("admin", "mentor", "mentee", "career_counselor", "guest", name="role_name"), unique=True, nullable=False)
+    role_name = Column(
+        Enum("admin", "mentors", "student", "career_counselor", name="role_name"),
+        unique=True,
+        nullable=False
+    )
     description = Column(Text)
     permissions = Column(JSON, default=[])
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime, default=datetime.now)
+    updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
 
     # Relationships
     user_roles = relationship("UserRole", back_populates="role")
 
+
 class UserRole(Base):
     __tablename__ = "user_roles"
-    
-    user_role_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    user_id = Column(UUID(as_uuid=True), ForeignKey("users.user_id"), nullable=False)
-    role_id = Column(UUID(as_uuid=True), ForeignKey("roles.role_id"), nullable=False)
-    assigned_at = Column(DateTime, default=datetime.utcnow)
-    assigned_by = Column(UUID(as_uuid=True), ForeignKey("users.user_id"), nullable=True)
-    is_active = Column(Boolean, default=True)
-    
-    # Unique constraint to prevent duplicate role assignments
-    __table_args__ = (UniqueConstraint('user_id', 'role_id', name='unique_user_role'),)
-    
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)  # association PK
+    user_id = Column(String, ForeignKey("users.user_id", ondelete="CASCADE"), nullable=False)
+    role_id = Column(UUID(as_uuid=True), ForeignKey("roles.role_id", ondelete="CASCADE"), nullable=False)
+    role_name = Column(String, nullable=False)  # redundant, but okay if you need quick access
+    granted_at = Column(DateTime, default=datetime.now)
+    granted_by = Column(String)  # admin user_id who granted this role
+
     # Relationships
-    user = relationship("User", back_populates="user_roles", foreign_keys=[user_id])
+    user = relationship("User", back_populates="user_roles")
     role = relationship("Role", back_populates="user_roles")
+
 
 # --- SKILLS ---
 class Skills(Base):
@@ -98,28 +116,29 @@ class Skills(Base):
     category = Column(String, nullable=False)  # technical, soft, domain-specific
     description = Column(Text)
     industry_relevance = Column(JSON, default=[])  # Industries where this skill is valuable
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime, default=datetime.now)
+    updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
 
     # Relationships
     user_skills = relationship("UserSkills", back_populates="skill", cascade="all, delete-orphan")
     learning_resources = relationship("LearningResources", back_populates="skill", cascade="all, delete-orphan")
 
+
 class UserSkills(Base):
     __tablename__ = "user_skills"
 
-    user_skill_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    user_id = Column(UUID(as_uuid=True), ForeignKey("users.user_id"), nullable=False, index=True)
-    skill_id = Column(UUID(as_uuid=True), ForeignKey("skills.skill_id"), nullable=False, index=True)
-    proficiency_level = Column(Enum("beginner", "intermediate", "advanced", "expert", name="proficiency_level"), nullable=False)
-    years_of_experience = Column(Integer, default=0)
-    is_verified = Column(Boolean, default=False)  # Whether skill is verified through assessment
-    verification_score = Column(Float, nullable=True)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)  # association PK
+    user_id = Column(String, ForeignKey("users.user_id", ondelete="CASCADE"), nullable=False)
+    skill_id = Column(UUID(as_uuid=True), ForeignKey("skills.skill_id", ondelete="CASCADE"), nullable=False)
 
-    # Unique constraint
-    __table_args__ = (UniqueConstraint('user_id', 'skill_id', name='unique_user_skill'),)
+    skill_name = Column(String, nullable=False)  # redundant, but okay if you want denormalized lookup
+    proficiency_level = Column(String)  # beginner, intermediate, advanced, expert
+    years_of_experience = Column(Integer, default=0)
+    verified = Column(Boolean, default=False)
+    created_at = Column(DateTime, default=datetime.now)
+
+    # Unique constraint to prevent duplicate entries
+    __table_args__ = (UniqueConstraint("user_id", "skill_id", name="unique_user_skill"),)
 
     # Relationships
     user = relationship("User", back_populates="skills")
@@ -141,8 +160,8 @@ class LearningResources(Base):
     rating = Column(Float)
     cost_type = Column(Enum("free", "paid", "subscription", name="cost_type"), default="free")
     tags = Column(JSON, default=[])
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime, default=datetime.now)
+    updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
 
     # Relationships
     skill = relationship("Skills", back_populates="learning_resources")
@@ -160,10 +179,10 @@ class PsychometricTest(Base):
     learning_preferences = Column(JSON, default={})
     completion_score = Column(Float, default=0.0)  # Gamification score
     time_taken = Column(Integer)  # in minutes
-    taken_at = Column(DateTime, default=datetime.utcnow, index=True)
+    taken_at = Column(DateTime, default=datetime.now, index=True)
     is_complete = Column(Boolean, default=False)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime, default=datetime.now)
+    updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
 
     # Relationships
     user = relationship("User", back_populates="psychometric_tests")
@@ -182,8 +201,8 @@ class CareerPath(Base):
     growth_prospects = Column(String)
     education_requirements = Column(JSON, default=[])
     experience_requirements = Column(String)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime, default=datetime.now)
+    updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
     
     # Relationships
     career_recommendations = relationship("CareerRecommendation", back_populates="career_path")
@@ -201,8 +220,8 @@ class CareerRecommendation(Base):
     priority_level = Column(Enum("high", "medium", "low", name="priority_level"), default="medium")
     is_viewed = Column(Boolean, default=False)
     is_bookmarked = Column(Boolean, default=False)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime, default=datetime.now)
+    updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
     
     # Relationships
     user = relationship("User", back_populates="career_recommendations")
@@ -211,30 +230,26 @@ class CareerRecommendation(Base):
 # --- ROADMAPS (Enhanced) ---
 class Roadmap(Base):
     __tablename__ = "roadmaps"
-
+    
     roadmap_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    user_id = Column(UUID(as_uuid=True), ForeignKey("users.user_id"), nullable=False, index=True)
-    career_path_id = Column(UUID(as_uuid=True), ForeignKey("career_paths.path_id"), nullable=True)
+    user_id = Column(String, ForeignKey("users.user_id", ondelete="CASCADE"), nullable=False)
     title = Column(String, nullable=False)
     description = Column(Text)
-    target_completion_date = Column(Date)
-    estimated_duration = Column(Integer)  # in months
-    difficulty_level = Column(Enum("beginner", "intermediate", "advanced", name="difficulty_level"), default="intermediate")
-    status = Column(Enum("draft", "active", "completed", "paused", name="roadmap_status"), default="draft")
-    progress_percentage = Column(Float, default=0.0)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-
+    career_path = Column(String)
+    progress_percentage = Column(Integer, default=0)
+    created_at = Column(DateTime, default=datetime.now)
+    updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
+    
     # Relationships
     user = relationship("User", back_populates="roadmaps")
-    career_path = relationship("CareerPath")
     milestones = relationship("Milestone", back_populates="roadmap", cascade="all, delete-orphan")
+
 
 class Milestone(Base):
     __tablename__ = "milestones"
     
     milestone_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    roadmap_id = Column(UUID(as_uuid=True), ForeignKey("roadmaps.roadmap_id"), nullable=False, index=True)
+    roadmap_id = Column(UUID(as_uuid=True), ForeignKey("roadmaps.roadmap_id", ondelete="CASCADE"), nullable=False, index=True)
     title = Column(String, nullable=False)
     description = Column(Text)
     order_sequence = Column(Integer, nullable=False)
@@ -245,10 +260,10 @@ class Milestone(Base):
     status = Column(Enum("not_started", "in_progress", "completed", "skipped", name="milestone_status"), default="not_started")
     completion_date = Column(DateTime, nullable=True)
     points_awarded = Column(Integer, default=0)  # Gamification
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime, default=datetime.now)
+    updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
     
-    # Relationships
+    # Relationship back to Roadmap
     roadmap = relationship("Roadmap", back_populates="milestones")
 
 # --- ASSESSMENTS ---
@@ -257,7 +272,7 @@ class Assessment(Base):
 
     assessment_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.user_id"), nullable=False, index=True)
-    user_skill_id = Column(UUID(as_uuid=True), ForeignKey("user_skills.user_skill_id"), nullable=False, index=True)
+    user_skill_id = Column(UUID(as_uuid=True), ForeignKey("user_skills.id", ondelete="CASCADE"))
     assessment_type = Column(Enum("skill_test", "practice_quiz", "certification", name="assessment_type"), default="skill_test")
     score = Column(Integer, nullable=False)
     max_score = Column(Integer, nullable=False)
@@ -266,9 +281,9 @@ class Assessment(Base):
     attempts_count = Column(Integer, default=1)
     is_passed = Column(Boolean, default=False)
     points_earned = Column(Integer, default=0)  # Gamification
-    taken_at = Column(DateTime, default=datetime.utcnow, index=True)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    taken_at = Column(DateTime, default=datetime.now, index=True)
+    created_at = Column(DateTime, default=datetime.now)
+    updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
 
     # Relationships
     user = relationship("User", back_populates="assessments")
@@ -288,37 +303,37 @@ class AssessmentQuestion(Base):
     points = Column(Integer, nullable=False)
     is_correct = Column(Boolean, default=False)
     time_taken = Column(Integer)  # in seconds
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime, default=datetime.now)
+    updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
 
     # Relationships
     assessment = relationship("Assessment", back_populates="questions")
 
-# --- MENTORSHIP ---
-class MentorshipSession(Base):
-    __tablename__ = "mentorship_sessions"
+# # --- MENTORSHIP ---
+# class MentorshipSession(Base):
+    # __tablename__ = "mentorship_sessions"
 
-    session_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    mentor_id = Column(UUID(as_uuid=True), ForeignKey("users.user_id"), nullable=False, index=True)
-    mentee_id = Column(UUID(as_uuid=True), ForeignKey("users.user_id"), nullable=False, index=True)
-    session_type = Column(Enum("career_guidance", "skill_development", "interview_prep", "general", name="session_type"), default="general")
-    scheduled_time = Column(DateTime, nullable=False, index=True)
-    duration_minutes = Column(Integer, nullable=False)
-    actual_duration = Column(Integer, nullable=True)
-    status = Column(Enum("scheduled", "in_progress", "completed", "canceled", "no_show", name="session_status"), default="scheduled")
-    meeting_url = Column(String)
-    agenda = Column(Text)
-    notes = Column(Text)
-    mentor_feedback = Column(Text)
-    mentee_feedback = Column(Text)
-    rating = Column(Integer)  # 1-5 stars
-    points_earned = Column(Integer, default=0)  # Gamification for mentee
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    # session_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    # mentor_id = Column(UUID(as_uuid=True), ForeignKey("users.user_id"), nullable=False, index=True)
+    # mentee_id = Column(UUID(as_uuid=True), ForeignKey("users.user_id"), nullable=False, index=True)
+    # session_type = Column(Enum("career_guidance", "skill_development", "interview_prep", "general", name="session_type"), default="general")
+    # scheduled_time = Column(DateTime, nullable=False, index=True)
+    # duration_minutes = Column(Integer, nullable=False)
+    # actual_duration = Column(Integer, nullable=True)
+    # status = Column(Enum("scheduled", "in_progress", "completed", "canceled", "no_show", name="session_status"), default="scheduled")
+    # meeting_url = Column(String)
+    # agenda = Column(Text)
+    # notes = Column(Text)
+    # mentor_feedback = Column(Text)
+    # mentee_feedback = Column(Text)
+    # rating = Column(Integer)  # 1-5 stars
+    # points_earned = Column(Integer, default=0)  # Gamification for mentee
+    # created_at = Column(DateTime, default=datetime.now)
+    # updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
 
-    # Relationships
-    mentor = relationship("User", foreign_keys=[mentor_id], back_populates="mentorship_as_mentor")
-    mentee = relationship("User", foreign_keys=[mentee_id], back_populates="mentorship_as_mentee")
+    # # Relationships
+    # mentor = relationship("User", foreign_keys=[mentor_id], back_populates="mentorship_as_mentor")
+    # mentee = relationship("User", foreign_keys=[mentee_id], back_populates="mentorship_as_mentee")
 
 # --- GAMIFICATION SYSTEM ---
 class GamificationProfile(Base):
@@ -333,8 +348,8 @@ class GamificationProfile(Base):
     achievements_unlocked = Column(JSON, default=[])
     streak_days = Column(Integer, default=0)
     last_activity_date = Column(Date, default=date.today)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime, default=datetime.now)
+    updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
     
     # Relationships
     user = relationship("User", back_populates="gamification_profile")
@@ -351,8 +366,8 @@ class Badge(Base):
     criteria = Column(JSON, default={})
     rarity = Column(Enum("common", "uncommon", "rare", "epic", "legendary", name="badge_rarity"), default="common")
     is_active = Column(Boolean, default=True)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime, default=datetime.now)
+    updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
 
 class UserBadge(Base):
     __tablename__ = "user_badges"
@@ -360,7 +375,7 @@ class UserBadge(Base):
     user_badge_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.user_id"), nullable=False)
     badge_id = Column(UUID(as_uuid=True), ForeignKey("badges.badge_id"), nullable=False)
-    earned_at = Column(DateTime, default=datetime.utcnow)
+    earned_at = Column(DateTime, default=datetime.now)
     
     # Unique constraint
     __table_args__ = (UniqueConstraint('user_id', 'badge_id', name='unique_user_badge'),)
@@ -382,7 +397,7 @@ class AgentInteraction(Base):
     context_data = Column(JSON, default={})
     satisfaction_rating = Column(Integer)  # 1-5 stars
     session_token = Column(String)
-    created_at = Column(DateTime, default=datetime.utcnow, index=True)
+    created_at = Column(DateTime, default=datetime.now, index=True)
     
     # Relationships
     user = relationship("User")
@@ -392,7 +407,7 @@ Index('idx_user_skills_user_id', UserSkills.user_id)
 Index('idx_user_skills_skill_id', UserSkills.skill_id)
 Index('idx_assessments_user_skill', Assessment.user_skill_id)
 Index('idx_roadmaps_user_id', Roadmap.user_id)
-Index('idx_mentorship_mentor', MentorshipSession.mentor_id)
-Index('idx_mentorship_mentee', MentorshipSession.mentee_id)
+# Index('idx_mentorship_mentor', MentorshipSession.mentor_id)
+# Index('idx_mentorship_mentee', MentorshipSession.mentee_id)
 Index('idx_agent_interactions_user', AgentInteraction.user_id)
 Index('idx_career_recommendations_user', CareerRecommendation.user_id)

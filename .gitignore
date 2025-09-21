@@ -57,3 +57,10 @@ Thumbs.db
 .idea/
 .vscode/
 *.swp
+
+.pdf
+Questions.py
+
+alembic/
+*.ini
+
