@@ -8,16 +8,23 @@ from dotenv import load_dotenv
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+
+DATABASE_URL = os.getenv("SQLITE_DATABASE_URL", "sqlite:///./data/database.db")
+
+
+connect_args = {"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {}
+
+
 load_dotenv()
 
-DATABASE_URL = os.getenv("SQLITE_DATABASE_URL")
+
 # DATABASE_URL = "postgresql://appuser:mypassword@localhost:5432/my_project_db"
 # primary_engine = create_engine(DATABASE_URL, echo=True)
 
 primary_engine = create_engine(
         DATABASE_URL, 
         echo=True,  # Set to False in production
-        connect_args={"check_same_thread": False}  # Required for SQLite with FastAPI
+        connect_args=connect_args 
     )
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=primary_engine)
 def init_db():
