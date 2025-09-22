@@ -3,8 +3,8 @@ from langchain.prompts import ChatPromptTemplate
 from langchain.schema.output_parser import StrOutputParser
 from typing import Dict
 
-from llm.gemini_llm import LLM_initialise
-from pydantic_schema.Enums import AssessmentType
+from app.llm.gemini_llm import LLM_initialise
+from app.pydantic_schema.Enums import AssessmentType
 
 class PsychologistAgent:
     """Specialized agent for mental health analysis and support"""

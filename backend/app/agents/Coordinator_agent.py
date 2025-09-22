@@ -7,8 +7,8 @@ from typing import Optional, List, Dict, Any
 
 from .Councellor_agent import CounsellorAgent
 from .Psychologist_agent import PsychologistAgent
-from llm.gemini_llm import LLM_initialise
-from pydantic_schema.Enums import AssessmentType,SupportType,ConsultationStatus
+from app.llm.gemini_llm import LLM_initialise
+from app.pydantic_schema.Enums import AssessmentType,SupportType,ConsultationStatus
 
 class CoordinatorState(BaseModel):
     """State for the coordinator agent"""

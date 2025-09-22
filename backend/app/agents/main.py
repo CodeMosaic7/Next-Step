@@ -5,7 +5,7 @@ import uuid
 from .Councellor_agent import CounsellorAgent
 from .Coordinator_agent import CoordinatorAgent,CoordinatorState
 from .Psychologist_agent import PsychologistAgent
-from pydantic_schema.Enums import AssessmentType,ConsultationStatus
+from app.pydantic_schema.Enums import AssessmentType,ConsultationStatus
 
 class CoordinatorSystem:
     """Main system that orchestrates the entire consultation process"""

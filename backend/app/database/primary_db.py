@@ -1,10 +1,10 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 import logging
-from models.career_model import Base
+from app.models.career_model import Base
 import os
 from dotenv import load_dotenv
-
+load_dotenv()
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 

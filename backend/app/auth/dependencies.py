@@ -5,7 +5,7 @@ from typing import Dict, Any
 import uuid
 
 # Import your existing Firebase verification
-from firebase_setup import fb_verify_token
+from app.firebase_setup import fb_verify_token
 
 security = HTTPBearer()
 

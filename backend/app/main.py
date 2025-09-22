@@ -4,18 +4,20 @@ import datetime
 import os
 from dotenv import load_dotenv
 from firebase_admin import firestore
-from database.primary_db import init_db
-from firebase_setup import fb_verify_token
-from pydantic_schema.request_schemas import UserRegistrationRequest, UserProfileCreateRequest, UserProfileUpdateRequest
-from pydantic_schema.response_schema import UserResponse, UserProfileResponse, UserDashboardResponse, CompleteUserResponse
-from database.db_dependies import get_db
-from routes.bot_routes import router as bot_routes
 from sqlalchemy.orm import Session
-from models.career_model import User, UserProfile  # Your existing models adapted for SQLite
-import uuid
 from sqlalchemy import create_engine
 import json
 import base64
+
+from app.database.primary_db import init_db
+from app.models.career_model import User, UserProfile  # Your existing models adapted for SQLite
+from app.firebase_setup import fb_verify_token
+from app.database.db_dependies import get_db
+from app.routes.bot_routes import router as bot_routes
+from app.pydantic_schema.request_schemas import UserRegistrationRequest, UserProfileCreateRequest, UserProfileUpdateRequest
+from app.pydantic_schema.response_schema import UserResponse, UserProfileResponse, UserDashboardResponse, CompleteUserResponse
+
+
 
 load_dotenv()
 
@@ -184,7 +186,6 @@ def protected_route(
         
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error processing user data: {str(e)}")
-
 @app.post("/registration", response_model=UserDashboardResponse) #works
 def register_route(
     registration_data: UserRegistrationRequest,
@@ -306,7 +307,6 @@ def register_route(
     except Exception as e:
         db_session.rollback()
         raise HTTPException(status_code=500, detail=f"Registration failed: {str(e)}")
-
 @app.get("/user/profile")
 def get_user_profile(
     user_data: dict = Depends(fb_verify_token),

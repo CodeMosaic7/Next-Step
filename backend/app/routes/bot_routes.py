@@ -7,29 +7,29 @@ import uuid
 from datetime import datetime
 
 # Import your existing modules
-from database.db_dependies import get_db
-from models.career_model import (
+from app.database.db_dependies import get_db
+from app.models.career_model import (
     User, UserProfile, CareerRecommendation, CareerPath, 
     AgentInteraction, GamificationProfile, UserBadge, Badge,
     PsychometricTest, Skills, UserSkills, Assessment
 )
 
 # Import Pydantic models from your documents
-from pydantic_schema.request_schemas import (
+from app.pydantic_schema.request_schemas import (
     AgentInteractionRequest, PsychometricTestRequest, 
     AssessmentSubmitRequest, UserProfileUpdateRequest
 )
-from pydantic_schema.response_schema import (
+from app.pydantic_schema.response_schema import (
     AgentInteractionResponse, PsychologistAnalysisResponse,
     CounsellorRecommendationResponse, CoordinatorResponse,
     UserDashboardResponse, GamificationProfileResponse
 )
-from pydantic_schema.Enums import AssessmentType, AgentTypeEnum
+from app.pydantic_schema.Enums import AssessmentType, AgentTypeEnum
 
 # Import your coordinator system
-from agents.main import CoordinatorSystem
-from agents.Database_service_layer import DatabaseService
-from auth.dependencies import get_current_user  # Assuming you have auth
+from app.agents.main import CoordinatorSystem
+from app.agents.Database_service_layer import DatabaseService
+from app.auth.dependencies import get_current_user  # Assuming you have auth
 
 # Create router
 router = APIRouter(prefix="/api/v1", tags=["AI Agents & Coordination"])

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { auth } from "../firebase";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
 
 function RegistrationForm() {
   const [formData, setFormData] = useState({
@@ -16,7 +18,7 @@ function RegistrationForm() {
   const [user, setUser] = useState(null);
 
   const API_BASE_URL = import.meta.env.VITE_APP_API_URL || "http://127.0.0.1:8000";
-
+  const navigate = useNavigate();
   const educationLevels = [
     "High School",
     "Diploma", 
@@ -89,9 +91,9 @@ function RegistrationForm() {
       
       // Optional: Redirect after successful registration
       setTimeout(() => {
-        // Navigate to dashboard or next step
-        window.location.href = '/dashboard';
-      }, 2000);
+  navigate("/dashboard");
+}, 1500);
+
 
     } catch (err) {
       console.error("Registration error:", err);

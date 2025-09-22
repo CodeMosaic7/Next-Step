@@ -1,8 +1,8 @@
 import json
 from typing import Dict
-from llm.gemini_llm import LLM_initialise
+from app.llm.gemini_llm import LLM_initialise
 from langchain.prompts import ChatPromptTemplate
-from pydantic_schema.Enums import AssessmentType
+from app.pydantic_schema.Enums import AssessmentType
 from langchain.schema.output_parser import StrOutputParser
 
 

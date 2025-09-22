@@ -4,7 +4,7 @@ from typing import List
 from .Coordinator_agent import CoordinatorAgent, CoordinatorState
 from .Councellor_agent import CounsellorAgent
 from .Psychologist_agent import PsychologistAgent
-from pydantic_schema.Enums import SupportType, ConsultationStatus
+from app.pydantic_schema.Enums import SupportType, ConsultationStatus
 
 async def receive_assessment_report(state: CoordinatorState) -> CoordinatorState:
     """Initial step: receive and log the assessment report"""
