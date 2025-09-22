@@ -4,16 +4,20 @@ import datetime
 import os
 from dotenv import load_dotenv
 from firebase_admin import firestore
-from database.primary_db import init_db
-from firebase_setup import fb_verify_token
-from pydantic_schema.request_schemas import UserRegistrationRequest, UserProfileCreateRequest, UserProfileUpdateRequest
-from pydantic_schema.response_schema import UserResponse, UserProfileResponse, UserDashboardResponse, CompleteUserResponse
-from database.db_dependies import get_db
-from routes.bot_routes import router as bot_routes
 from sqlalchemy.orm import Session
-from models.career_model import User, UserProfile  # Your existing models adapted for SQLite
-import uuid
 from sqlalchemy import create_engine
+import json
+import base64
+
+from app.database.primary_db import init_db
+from app.models.career_model import User, UserProfile  # Your existing models adapted for SQLite
+from app.firebase_setup import fb_verify_token
+from app.database.db_dependies import get_db
+from app.routes.bot_routes import router as bot_routes
+from app.pydantic_schema.request_schemas import UserRegistrationRequest, UserProfileCreateRequest, UserProfileUpdateRequest
+from app.pydantic_schema.response_schema import UserResponse, UserProfileResponse, UserDashboardResponse, CompleteUserResponse
+
+
 
 load_dotenv()
 
@@ -35,8 +39,30 @@ def read_root():
     return {"message": "Welcome to the Next-Step Backend!"}
 
 @app.on_event("startup")
-def on_startup():
+def startup_event():
+    # init DB (create tables if they don't exist)
     init_db()
+
+    # Initialize Firebase Admin if service account provided
+    sa_env = os.getenv("FIREBASE_SERVICE_ACCOUNT_JSON")
+    if sa_env:
+        try:
+            # If provided base64-encoded, decode first
+            try:
+                decoded = base64.b64decode(sa_env).decode()
+                cred_dict = json.loads(decoded)
+            except Exception:
+                # assume it's a JSON string
+                cred_dict = json.loads(sa_env)
+            import firebase_admin
+            from firebase_admin import credentials
+            if not firebase_admin._apps:
+                credentials_obj = credentials.Certificate(cred_dict)
+                firebase_admin.initialize_app(credentials_obj)
+        except Exception as e:
+            # log if needed — don't crash startup for prototype
+            print("Warning: Firebase init failed:", e)
+
 
 def get_or_create_user(user_data: dict, db_session: Session):
     """
@@ -160,7 +186,6 @@ def protected_route(
         
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error processing user data: {str(e)}")
-
 @app.post("/registration", response_model=UserDashboardResponse) #works
 def register_route(
     registration_data: UserRegistrationRequest,
@@ -282,7 +307,6 @@ def register_route(
     except Exception as e:
         db_session.rollback()
         raise HTTPException(status_code=500, detail=f"Registration failed: {str(e)}")
-
 @app.get("/user/profile")
 def get_user_profile(
     user_data: dict = Depends(fb_verify_token),

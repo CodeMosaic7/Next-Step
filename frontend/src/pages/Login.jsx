@@ -1,12 +1,137 @@
-import { useState } from "react";
-import { login, register, logout, auth } from "../firebase";
-import axios from "axios";
+import { createContext, useContext, useState, useEffect } from 'react';
+import {   
+  Navigate, 
+  useLocation,
+  } from 'react-router-dom';
 
-function Login() {
+// 1. Auth Context
+const AuthContext = createContext();
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within AuthProvider');
+  }
+  return context;
+};
+
+// 2. Auth Provider
+export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Check authentication status on app load
+    const token = localStorage.getItem('authToken');
+    const userData = localStorage.getItem('userData');
+    
+    if (token && userData) {
+      try {
+        const parsedUser = JSON.parse(userData);
+        setUser(parsedUser);
+      } catch (error) {
+        console.error('Error parsing user data:', error);
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('userData');
+      }
+    }
+    setLoading(false);
+  }, []);
+
+  const login = (token, userData) => {
+    localStorage.setItem('authToken', token);
+    localStorage.setItem('userData', JSON.stringify(userData));
+    setUser(userData);
+  };
+
+  const logout = () => {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('userData');
+    setUser(null);
+  };
+
+  return (
+    <AuthContext.Provider 
+      value={{ 
+        user, 
+        login, 
+        logout, 
+        loading,
+        isAuthenticated: !!user,
+        isRegistered: user?.isRegistered || false
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+// 3. Protected Route Component
+export const ProtectedRoute = ({ children, requiresRegistration = false }) => {
+  const { isAuthenticated, loading, isRegistered } = useAuth();
+  const location = useLocation();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
+  // Not authenticated - redirect to login
+  if (!isAuthenticated) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
+  // // Authenticated but not registered - redirect to register
+  // if (isAuthenticated && !isRegistered && location.pathname !== '/register') {
+  //   return <Navigate to="/register" replace />;
+  // }
+
+  // Authenticated and registered but trying to access register page
+  // if (isAuthenticated && isRegistered && location.pathname === '/register') {
+  //   return <Navigate to="/dashboard" replace />;
+  // }
+
+  // // Additional check for routes that require registration
+  // if (requiresRegistration && !isRegistered) {
+  //   return <Navigate to="/register" replace />;
+  // }
+
+  return children;
+};
+
+// 4. Public Route (for login and home pages)
+export const PublicRoute = ({ children, redirectIfAuthenticated = true }) => {
+  const { isAuthenticated, loading, isRegistered } = useAuth();
+  const location = useLocation();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
+  if (isAuthenticated && redirectIfAuthenticated) {
+    // Determine redirect destination based on registration status
+    const redirectTo = isRegistered ? '/dashboard' : '/register';
+    const from = location.state?.from?.pathname || redirectTo;
+    return <Navigate to={from} replace />;
+  }
+
+  return children;
+};
+
+// 5. Updated Login Component with Firebase integration
+export const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const { login, logout } = useAuth();
 
   const API_BASE_URL = import.meta.env.VITE_APP_API_URL || "http://127.0.0.1:8000";
 
@@ -15,11 +140,11 @@ function Login() {
       setLoading(true);
       setMessage("");
       
+      // Import your Firebase register function
+      const { register } = await import("../firebase");
       await register(email, password);
-      setMessage("✅ User registered successfully!");
       
-      // Optional: Auto-login after registration
-      // await handleLogin();
+      setMessage("✅ User registered successfully! Please sign in.");
       
     } catch (err) {
       setMessage(`❌ Registration failed: ${err.message}`);
@@ -34,25 +159,41 @@ function Login() {
       setLoading(true);
       setMessage("");
       
+      // Import Firebase functions
+      const { login: firebaseLogin, auth } = await import("../firebase");
+      const axios = (await import("axios")).default;
+      
       // Login with Firebase
-      await login(email, password);
+      await firebaseLogin(email, password);
       
       // Get Firebase ID token
       const token = await auth.currentUser.getIdToken();
       
-      // Test protected endpoint
+      // Test protected endpoint to get user registration status
       const response = await axios.get(`${API_BASE_URL}/protected`, {
         headers: { 
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
-        timeout: 10000, // 10 second timeout
+        timeout: 10000,
       });
       
       console.log("Backend Response:", response.data);
-      setMessage(`✅ Login successful! Welcome ${response.data.user}`);
-      localStorage.setItem('authToken', token);
-      // Add logic that if user is registered it directs to /Dashboard else to /register
+      
+      // Create user data object - check if response.data.user has registration info
+      const userData = {
+        email: email,
+        uid: auth.currentUser.uid,
+        ...response.data.user, // Spread any additional user data from backend
+        isRegistered: response.data.user?.isRegistered || false // Backend should provide this
+      };
+      
+      // Use the login function from context
+      login(token, userData);
+      
+      setMessage(`✅ Login successful! Welcome ${userData.email || response.data.user}`);
+      
+      // Navigation will be handled automatically by ProtectedRoute logic
       
     } catch (err) {
       console.error("Login error:", err);
@@ -76,7 +217,14 @@ function Login() {
   const handleLogout = async () => {
     try {
       setLoading(true);
-      await logout();
+      
+      // Import Firebase logout
+      const { logout: firebaseLogout } = await import("../firebase");
+      await firebaseLogout();
+      
+      // Use context logout to clear local state
+      logout();
+      
       setMessage("✅ Logged out successfully!");
       setEmail("");
       setPassword("");
@@ -229,6 +377,4 @@ function Login() {
       </div>
     </div>
   );
-}
-
-export default Login;
+};

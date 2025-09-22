@@ -5,12 +5,12 @@ from sqlalchemy.exc import SQLAlchemyError
 from typing import Dict,List,Optional
 import uuid 
 
-from models.career_model import (
+from app.models.career_model import (
     User, UserProfile, CareerRecommendation, CareerPath, 
     AgentInteraction, GamificationProfile, UserBadge, Badge,
     PsychometricTest, Skills, UserSkills
 )
-from pydantic_schema.Enums import AssessmentType
+from app.pydantic_schema.Enums import AssessmentType
 
 
 class DatabaseService:

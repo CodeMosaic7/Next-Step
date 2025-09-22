@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-cred = credentials.Certificate("serviceAccountKey.json")
+cred = credentials.Certificate("app/serviceAccountKey.json")
 firebase_admin.initialize_app(cred)
 
 def fb_verify_token(authorization: str = Header(None)):

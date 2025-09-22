@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Send, Facebook, Twitter, Instagram, Linkedin, Youtube, Bot, User, Loader } from 'lucide-react';
 import { auth } from "../firebase";
 import axios from "axios";
-import {Header} from "../components/Header"
+import Header from "../components/Header.jsx"
 
 // Page Title Component
 const PageTitle = () => {

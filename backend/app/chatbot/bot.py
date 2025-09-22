@@ -25,9 +25,9 @@ from langgraph.graph import StateGraph, END,START
 
 import pinecone
 from pydantic import BaseModel, Field
-from pydantic_schema.Enums import QuestionType,AssessmentType
-from database.vector_db import VectorDatabase
-from agents.main import CoordinatorSystem
+from app.pydantic_schema.Enums import QuestionType,AssessmentType
+from app.database.vector_db import VectorDatabase
+from app.agents.main import CoordinatorSystem
 
 from .Questions import PERSONALITY_QUESTIONS,PSYCHOMETRIC_QUESTIONS,APTITUDE_QUESTIONS
 
