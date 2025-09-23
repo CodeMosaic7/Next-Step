@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { auth } from "../firebase";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
+import Footer from "../components/Footer";
 
 function RegistrationForm() {
   const [formData, setFormData] = useState({
@@ -534,29 +534,9 @@ function RegistrationForm() {
           </div>
         </div>
 
-        {/* Trust Indicators */}
-        <div className="mt-8 flex items-center justify-center space-x-8 text-gray-400">
-          <div className="flex items-center space-x-2">
-            <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
-            </svg>
-            <span className="text-sm">SSL Encrypted</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <span className="text-sm">GDPR Compliant</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M18 8A8 8 0 11-8-8 8 8 0 0118 8zM9 3a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-            </svg>
-            <span className="text-sm">Privacy Protected</span>
-          </div>
-        </div>
-      </div>
 
+      </div>
+        <Footer />
       <style jsx>{`
         @keyframes fade-in {
           from {
