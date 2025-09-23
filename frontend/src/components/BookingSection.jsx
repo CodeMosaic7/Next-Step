@@ -1,4 +1,4 @@
-import {yseState} from 'react';
+import {useState} from 'react';
 import { Calendar, Clock, MessageSquare, Video } from 'lucide-react';
 import MiniCalendar from './MiniCalendar';
 import TimeSlot from './TimeSlot';

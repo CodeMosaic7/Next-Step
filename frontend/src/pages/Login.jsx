@@ -3,7 +3,7 @@ import {
   Navigate, 
   useLocation,
   } from 'react-router-dom';
-
+import Footer from '../components/Footer';
 // 1. Auth Context
 const AuthContext = createContext();
 
@@ -372,13 +372,9 @@ export const Login = () => {
           </div>
 
           {/* Footer */}
-          <div className="bg-gray-50 px-8 py-4 text-center border-t border-gray-200">
-            <p className="text-xs text-gray-500">
-              By continuing, you agree to our Terms of Service and Privacy Policy
-            </p>
-          </div>
+          <Footer />
         </div>
       </div>
     </div>
   );
-};
+};139+4
