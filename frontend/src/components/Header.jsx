@@ -4,7 +4,6 @@ const Header = () => {
   function openLogin() {
     window.location.href = "/login";
   }
-
   return (
     
       <header className="bg-white shadow-sm border-b">
@@ -19,7 +18,7 @@ const Header = () => {
             <nav className="hidden md:flex space-x-8">
               <a href="/#" className="text-gray-700 hover:text-blue-600 px-3 py-2">Home</a>
               <a href="/Assessment" className="text-blue-600 font-medium px-3 py-2">Assessment</a>
-              <a href="/dashboard" className="text-gray-700 hover:text-blue-600 px-3 py-2">Careers</a>
+              <a href="/career-dashboard" className="text-gray-700 hover:text-blue-600 px-3 py-2">Careers</a>
               <a href="/mentor-board" className="text-gray-700 hover:text-blue-600 px-3 py-2">Mentors</a>
               <a href="/resources" className="text-gray-700 hover:text-blue-600 px-3 py-2">Resources</a>
               <a href="/dashboard" className="text-gray-700 hover:text-blue-600 px-3 py-2">Profile</a>
