@@ -1,11 +1,12 @@
 // src/api.js
+const API_BASE = import.meta.env.VITE_PUBLIC_API_URL||"http://localhost:8000";
 
 export async function getProtectedData(token) {
-  const response = await fetch("http://localhost:8000/protected", {
+  const response = await fetch(`${API_BASE}/protected`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
-  });
+  }); 
 
   if (!response.ok) {
     throw new Error("Failed to fetch protected data");
@@ -15,7 +16,7 @@ export async function getProtectedData(token) {
 }
 
 export async function registerStudent(token, studentData) {
-  const response = await fetch("http://localhost:8000/register-student", {
+  const response = await fetch(`${API_BASE}/register-student`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
