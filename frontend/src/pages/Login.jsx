@@ -140,7 +140,7 @@ export const Login = () => {
       setLoading(true);
       setMessage("");
       
-      // Import your Firebase register function
+      // Import yo  ur Firebase register function
       const { register } = await import("../firebase");
       await register(email, password);
       
