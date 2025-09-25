@@ -20,8 +20,8 @@ from app.pydantic_schema.response_schema import UserResponse, UserProfileRespons
 
 
 load_dotenv()
-
-origins=['http://localhost:5173']
+FRONTEND_URL = os.getenv("FRONTEND_URL")
+origins=['http://localhost:5173',FRONTEND_URL]
 
 db=firestore.client()
 app = FastAPI(title="Next-Step Backend")
@@ -598,3 +598,7 @@ def get_user_dashboard(
         
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to get dashboard: {str(e)}")
+    
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
