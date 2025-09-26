@@ -81,8 +81,8 @@ This project solves that by leveraging **Generative AI + Data-driven Skill Mappi
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-username/ai-career-advisor.git
-cd ai-career-advisor
+git clone https://github.com/CodeMosaic7/Next-Step.git
+cd Next-Step
 ```
 
 ---
