@@ -3,6 +3,7 @@ import { auth } from "../firebase";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
+import { registerStudent } from "../api";
 
 function RegistrationForm() {
   const [formData, setFormData] = useState({
@@ -78,13 +79,7 @@ function RegistrationForm() {
         firebase_uid: formData.firebase_uid
       };
 
-      const response = await axios.post(`${API_BASE_URL}/registration`, registrationData, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        timeout: 15000
-      });
+      const response = registerStudent(token, registrationData);
 
       console.log("Registration successful:", response.data);
       setMessage("✅ Registration completed successfully! Welcome to your personalized career journey!");
