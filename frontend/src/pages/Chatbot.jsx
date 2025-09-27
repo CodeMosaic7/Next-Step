@@ -3,6 +3,7 @@ import { Send, Facebook, Twitter, Instagram, Linkedin, Youtube, Bot, User, Loade
 import { auth } from "../firebase";
 import axios from "axios";
 import Header from "../components/Header.jsx"
+import Footer from '../components/Footer.jsx';
 
 // Page Title Component
 const PageTitle = () => {
@@ -31,11 +32,10 @@ const AgentSelector = ({ selectedAgent, onAgentChange }) => {
           <button
             key={agent.id}
             onClick={() => onAgentChange(agent.id)}
-            className={`px-3 py-2 rounded-lg text-xs transition-colors ${
-              selectedAgent === agent.id
+            className={`px-3 py-2 rounded-lg text-xs transition-colors ${selectedAgent === agent.id
                 ? 'bg-blue-600 text-white'
                 : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
-            }`}
+              }`}
           >
             <div className="font-medium">{agent.name}</div>
             <div className="text-xs opacity-75">{agent.description}</div>
@@ -49,7 +49,7 @@ const AgentSelector = ({ selectedAgent, onAgentChange }) => {
 // Chat Message Component
 const ChatMessage = ({ message, isBot = false, agentType = 'COORDINATOR', isLoading = false }) => {
   const getAgentIcon = (type) => {
-    switch(type) {
+    switch (type) {
       case 'PSYCHOLOGIST':
         return '🧠';
       case 'COUNSELLOR':
@@ -68,12 +68,10 @@ const ChatMessage = ({ message, isBot = false, agentType = 'COORDINATOR', isLoad
             <span className="text-sm">{getAgentIcon(agentType)}</span>
           </div>
         )}
-        
-        <div className={`px-4 py-2 rounded-lg ${
-          isBot 
-            ? 'bg-gray-100 text-gray-900' 
+        <div className={`px-4 py-2 rounded-lg ${isBot
+            ? 'bg-gray-100 text-gray-900'
             : 'bg-blue-600 text-white'
-        }`}>
+          }`}>
           <div className="text-sm leading-relaxed">
             {isLoading ? (
               <div className="flex items-center space-x-2">
@@ -93,7 +91,7 @@ const ChatMessage = ({ message, isBot = false, agentType = 'COORDINATOR', isLoad
 // Suggested Questions Component
 const SuggestedQuestions = ({ questions, onQuestionClick, selectedAgent }) => {
   const getAgentQuestions = (agentType) => {
-    switch(agentType) {
+    switch (agentType) {
       case 'PSYCHOLOGIST':
         return [
           "What are my personality strengths?",
@@ -147,7 +145,6 @@ const ChatInput = ({ message, setMessage, onSend, isLoading }) => {
       setMessage('');
     }
   };
-
   return (
     <form onSubmit={handleSubmit} className="flex items-center gap-2">
       <div className="flex-1 relative">
@@ -171,31 +168,6 @@ const ChatInput = ({ message, setMessage, onSend, isLoading }) => {
   );
 };
 
-// Footer Component
-const Footer = () => {
-  return (
-    <footer className="bg-gray-900 text-white py-6">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row justify-between items-center">
-          <div className="flex space-x-6 text-sm mb-4 md:mb-0">
-            <a href="#" className="hover:text-gray-300">Company</a>
-            <a href="#" className="hover:text-gray-300">Support</a>
-            <a href="#" className="hover:text-gray-300">Legal</a>
-          </div>
-          
-          <div className="flex space-x-4">
-            <Facebook className="w-5 h-5 text-gray-400 hover:text-blue-400 cursor-pointer" />
-            <Twitter className="w-5 h-5 text-gray-400 hover:text-blue-300 cursor-pointer" />
-            <Instagram className="w-5 h-5 text-gray-400 hover:text-pink-400 cursor-pointer" />
-            <Linkedin className="w-5 h-5 text-gray-400 hover:text-blue-400 cursor-pointer" />
-            <Youtube className="w-5 h-5 text-gray-400 hover:text-red-400 cursor-pointer" />
-          </div>
-        </div>
-      </div>
-    </footer>
-  );
-};
-
 // Main Chat Component
 const ChatInterface = () => {
   const [messages, setMessages] = useState([
@@ -206,7 +178,7 @@ const ChatInterface = () => {
       timestamp: new Date()
     }
   ]);
-  
+
   const [currentMessage, setCurrentMessage] = useState('');
   const [selectedAgent, setSelectedAgent] = useState('COORDINATOR');
   const [isLoading, setIsLoading] = useState(false);
@@ -231,7 +203,7 @@ const ChatInterface = () => {
       isBot: false,
       timestamp: new Date()
     };
-    
+
     setMessages(prev => [...prev, userMessage]);
     setIsLoading(true);
     setError('');
@@ -245,32 +217,39 @@ const ChatInterface = () => {
       timestamp: new Date()
     };
     setMessages(prev => [...prev, loadingMessage]);
-
     try {
-      if (!auth.currentUser) {
+      const storedUser = localStorage.getItem("user");
+      if (!storedUser) {
         throw new Error("Please sign in to use the AI assistant");
       }
+      const user = JSON.parse(storedUser);
+      const token = user?.token;
 
-      const token = await auth.currentUser.getIdToken();
-      
+      if (!token) {
+        throw new Error("Invalid session, please sign in again");
+      }
       const requestData = {
         agent_type: selectedAgent,
         interaction_type: "CHAT",
         user_message: message,
         context_data: {
-          previous_messages: messages.slice(-5), // Send last 5 messages for context
-          timestamp: new Date().toISOString()
+          previous_messages: messages.slice(-5),
+          timestamp: new Date().toISOString(),
         },
-        session_token: sessionToken
+        session_token: sessionToken,
       };
 
-      const response = await axios.post(`${API_BASE_URL}/api/v1/agent/interact`, requestData, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        timeout: 30000 // 30 seconds timeout for AI responses
-      });
+      const response = await axios.post(
+        `${API_BASE_URL}/api/v1/agent/interact`,
+        requestData,
+        {
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          timeout: 30000,
+        }
+      );
 
       // Remove loading message and add actual response
       setMessages(prev => prev.slice(0, -1));
@@ -281,22 +260,21 @@ const ChatInterface = () => {
         agentType: selectedAgent,
         timestamp: new Date()
       };
-      
+
       setMessages(prev => [...prev, botResponse]);
-      
+
       // Update session token if provided
       if (response.data.session_token) {
         setSessionToken(response.data.session_token);
       }
-
     } catch (err) {
       console.error("Chat error:", err);
-      
+
       // Remove loading message
       setMessages(prev => prev.slice(0, -1));
-      
+
       let errorMessage = "I'm having trouble connecting right now. Please try again.";
-      
+
       if (err.response?.status === 401) {
         errorMessage = "Please sign in to continue chatting.";
       } else if (err.response?.status === 429) {
@@ -313,7 +291,7 @@ const ChatInterface = () => {
         agentType: selectedAgent,
         timestamp: new Date()
       };
-      
+
       setMessages(prev => [...prev, errorResponse]);
       setError(errorMessage);
     } finally {
@@ -324,10 +302,10 @@ const ChatInterface = () => {
   const handleQuestionClick = (question) => {
     handleSendMessage(question);
   };
-
+  
   const handleAgentChange = (agentType) => {
     setSelectedAgent(agentType);
-    
+
     // Add system message about agent change
     const agentNames = {
       'COORDINATOR': 'Career Coordinator',
@@ -341,17 +319,17 @@ const ChatInterface = () => {
       agentType: agentType,
       timestamp: new Date()
     };
-    
+
     setMessages(prev => [...prev, systemMessage]);
   };
 
   const getAgentStatus = () => {
     const agentNames = {
       'COORDINATOR': 'Career Coordinator',
-      'PSYCHOLOGIST': 'AI Psychologist', 
+      'PSYCHOLOGIST': 'AI Psychologist',
       'COUNSELLOR': 'Career Counsellor'
     };
-    
+
     return agentNames[selectedAgent] || 'AI Assistant';
   };
 
@@ -372,12 +350,11 @@ const ChatInterface = () => {
                 </p>
               </div>
             </div>
-            
+
             {/* Connection Status */}
             <div className="flex items-center space-x-2">
-              <div className={`w-2 h-2 rounded-full ${
-                error ? 'bg-red-400' : 'bg-green-400'
-              }`}></div>
+              <div className={`w-2 h-2 rounded-full ${error ? 'bg-red-400' : 'bg-green-400'
+                }`}></div>
               <span className="text-xs text-gray-500">
                 {error ? 'Connection Error' : 'Connected'}
               </span>
@@ -387,12 +364,12 @@ const ChatInterface = () => {
 
         {/* Agent Selector */}
         <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
-          <AgentSelector 
+          <AgentSelector
             selectedAgent={selectedAgent}
             onAgentChange={handleAgentChange}
           />
         </div>
-        
+
         {/* Chat Messages */}
         <div className="p-6 min-h-96 max-h-96 overflow-y-auto">
           {messages.map((message, index) => (
@@ -406,16 +383,16 @@ const ChatInterface = () => {
           ))}
           <div ref={messagesEndRef} />
         </div>
-        
+
         {/* Suggested Questions */}
         <div className="px-6 py-4 bg-gray-50 border-t border-gray-200">
           <p className="text-sm text-gray-600 mb-3">Suggested questions for {getAgentStatus()}:</p>
-          <SuggestedQuestions 
+          <SuggestedQuestions
             selectedAgent={selectedAgent}
             onQuestionClick={handleQuestionClick}
           />
         </div>
-        
+
         {/* Error Display */}
         {error && (
           <div className="px-6 py-2 bg-red-50 border-t border-red-200">
@@ -427,7 +404,7 @@ const ChatInterface = () => {
             </p>
           </div>
         )}
-        
+
         {/* Chat Input */}
         <div className="px-6 py-4 border-t border-gray-200">
           <ChatInput
@@ -436,7 +413,7 @@ const ChatInterface = () => {
             onSend={handleSendMessage}
             isLoading={isLoading}
           />
-          
+
           {/* Usage Tip */}
           <p className="text-xs text-gray-500 mt-2 text-center">
             Tip: Switch between different AI assistants for specialized advice

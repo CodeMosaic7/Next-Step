@@ -186,7 +186,8 @@ def protected_route(
         
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error processing user data: {str(e)}")
-@app.post("/registration", response_model=UserDashboardResponse) #works
+    
+@app.post("/registration") #works
 def register_route(
     registration_data: UserRegistrationRequest,
     user_data: dict = Depends(fb_verify_token),
@@ -208,7 +209,6 @@ def register_route(
             existing_profile.education_level = registration_data.education_level
             existing_profile.updated_at = datetime.datetime.now()
             # Add other fields as needed
-            db_session.commit()
             profile = existing_profile
         else:
             # Create new profile
@@ -220,16 +220,20 @@ def register_route(
                 updated_at=datetime.datetime.now()
             )
             db_session.add(new_profile)
-            db_session.commit()
-            db_session.refresh(new_profile)
             profile = new_profile
         
         # Update user data from registration
         user.display_name = registration_data.display_name
         user.phone_number = registration_data.phone_number
         user.email = registration_data.email
+        user.registered = True  # Set registered to True
+        user.updated_at = datetime.datetime.now()  # Update timestamp
         
+        # Commit all changes
         db_session.commit()
+        db_session.refresh(user)
+        if not existing_profile:
+            db_session.refresh(profile)
         
         # Keep Firestore logic for compatibility
         user_id = user_data["uid"]
@@ -260,53 +264,32 @@ def register_route(
             }
         })
         
-        # Create response using your schema
-        user_response = UserResponse(
-            user_id=user.user_id,
-            firebase_uid=user.firebase_uid,
-            email=user.email,
-            display_name=user.display_name,
-            phone_number=user.phone_number,
-            created_at=user.created_at,
-            last_login=user.last_login
-        )
-        
-        profile_response = None
-        if profile:
-            profile_response = UserProfileResponse(
-                profile_id=profile.profile_id,
-                user_id=profile.user_id,
-                age=profile.age,
-                education_level=profile.education_level,
-                current_occupation=profile.current_occupation,
-                years_of_experience=profile.years_of_experience,
-                location=profile.location,
-                bio=profile.bio,
-                interests=profile.interests or [],
-                career_goals=profile.career_goals,
-                preferred_industries=profile.preferred_industries or [],
-                psychologist_report=profile.psychologist_report or [],
-                counsellor_report=profile.counsellor_report or [],
-                created_at=profile.created_at,
-                updated_at=profile.updated_at
-            )
-        
-        return UserDashboardResponse(
-            user=user_response,
-            profile=profile_response,
-            skills=[],  # Will be populated when skills are added
-            recent_assessments=[],
-            active_roadmaps=[],
-            career_recommendations=[],
-            gamification=None,  # Will be created separately
-            recent_interactions=[]
-        )
+        # Return simple success message
+        return {"message": "Registration done"}
         
     except HTTPException:
         raise
     except Exception as e:
         db_session.rollback()
         raise HTTPException(status_code=500, detail=f"Registration failed: {str(e)}")
+    
+@app.get("/check-registration")
+def check_registration(
+    user_data: dict = Depends(fb_verify_token),
+    db_session: Session = Depends(get_db)
+):
+    """
+    Check if user is registered and has a complete profile
+    """
+    try:
+        user=db_session.query(User).filter(User.firebase_uid==user_data["uid"]).first()
+        if not user:
+            return {"is_registered": False, "message": "Please register."}          
+        return {"is_registered": True, "message": "Move to dashboard"} 
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to check registration: {str(e)}")
+    
 @app.get("/user/profile")
 def get_user_profile(
     user_data: dict = Depends(fb_verify_token),

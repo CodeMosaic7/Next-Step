@@ -2,7 +2,7 @@
 const API_BASE = import.meta.env.VITE_PUBLIC_API_URL||"http://localhost:8000";
 
 export async function getProtectedData(token) {
-  const response = await fetch(`${API_BASE}/protected`, {
+  const response = await axios.get(`${API_BASE}/protected`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -14,20 +14,25 @@ export async function getProtectedData(token) {
 
   return await response.json();
 }
-
-export async function registerStudent(token, studentData) {
-  const response = await fetch(`${API_BASE}/register-student`, {
-    method: "POST",
+export async function checkRegistrationStatus(token) {
+  const response = await axios.get(`${API_BASE}/check-registration`, {
     headers: {
-      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(studentData),
   });
-
-  if (!response.ok) {
+}
+export async function registerStudent (token,registrationData) {
+  const response = await axios.post(`${API_BASE}/registration`, registrationData, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        timeout: 15000
+      });
+      if (!response.ok) {
     throw new Error("Failed to register student");
   }
 
   return await response.json();
 }
+

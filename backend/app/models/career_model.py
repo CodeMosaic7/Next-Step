@@ -21,6 +21,7 @@ class User(Base):
     created_at = Column(DateTime, default=datetime.now, index=True)
     updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
     last_login = Column(DateTime, index=True)
+    registered=Column(Boolean, default=False)
     created_by_ip = Column(String)
     
     meta_data = Column(JSON, default=lambda: {})
