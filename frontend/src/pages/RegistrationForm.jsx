@@ -5,6 +5,25 @@ import { useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
 import { registerStudent } from "../api";
 
+// Fixed API function
+export async function checkRegistrationStatus(token) {
+  const API_BASE_URL = import.meta.env.VITE_APP_API_URL || "http://127.0.0.1:8000";
+  
+  try {
+    const response = await axios.get(`${API_BASE_URL}/check-registration`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    
+    console.log("Registration status response:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Failed to check registration status:", error);
+    throw error;
+  }
+}
+
 function RegistrationForm() {
   const [formData, setFormData] = useState({
     display_name: "",
@@ -17,6 +36,7 @@ function RegistrationForm() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [user, setUser] = useState(null);
+  const [checkingStatus, setCheckingStatus] = useState(true); // New state for status check
 
   const API_BASE_URL = import.meta.env.VITE_APP_API_URL || "http://127.0.0.1:8000";
   const navigate = useNavigate();
@@ -32,9 +52,33 @@ function RegistrationForm() {
     "Other"
   ];
 
+  // Check registration status when user is authenticated
+  const checkUserRegistration = async (currentUser) => {
+    try {
+      setCheckingStatus(true);
+      const token = await currentUser.getIdToken();
+      const statusResponse = await checkRegistrationStatus(token);
+      
+      // If user is already registered, redirect to dashboard
+      if (statusResponse.is_registered) {
+        console.log("User is already registered, redirecting to dashboard");
+        navigate("/dashboard");
+        return;
+      }
+      
+      console.log("User is not registered, showing registration form");
+    } catch (error) {
+      console.error("Error checking registration status:", error);
+      // If there's an error checking status, we'll show the form anyway
+      // This could happen if the endpoint doesn't exist yet or user isn't registered
+    } finally {
+      setCheckingStatus(false);
+    }
+  };
+
   // Get user info from Firebase on component mount
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((currentUser) => {
+    const unsubscribe = auth.onAuthStateChanged(async (currentUser) => {
       if (currentUser) {
         setUser(currentUser);
         setFormData(prev => ({
@@ -43,11 +87,17 @@ function RegistrationForm() {
           firebase_uid: currentUser.uid,
           display_name: currentUser.displayName || ""
         }));
+        
+        // Check if user is already registered
+        await checkUserRegistration(currentUser);
+      } else {
+        // If no user, redirect to login
+        navigate("/login");
       }
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [navigate]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -79,16 +129,15 @@ function RegistrationForm() {
         firebase_uid: formData.firebase_uid
       };
 
-      const response = registerStudent(token, registrationData);
+      const response = await registerStudent(token, registrationData);
 
       console.log("Registration successful:", response.data);
       setMessage("✅ Registration completed successfully! Welcome to your personalized career journey!");
       
-      // Optional: Redirect after successful registration
+      // Redirect after successful registration
       setTimeout(() => {
-  navigate("/dashboard");
-}, 1500);
-
+        navigate("/dashboard");
+      }, 1500);
 
     } catch (err) {
       console.error("Registration error:", err);
@@ -114,6 +163,18 @@ function RegistrationForm() {
     formData.email.includes('@');
 
   const completedFields = Object.values(formData).filter(val => val && val.toString().trim()).length - 1; // Subtract firebase_uid as it's auto-filled
+
+  // Show loading spinner while checking registration status
+  if (checkingStatus) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-violet-50 via-blue-50 to-cyan-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
+          <p className="text-lg text-gray-600">Checking your registration status...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-violet-50 via-blue-50 to-cyan-50 py-8 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
@@ -529,9 +590,8 @@ function RegistrationForm() {
           </div>
         </div>
 
-
       </div>
-        <Footer />
+      <Footer />
       <style jsx>{`
         @keyframes fade-in {
           from {

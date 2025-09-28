@@ -117,7 +117,7 @@ Frontend will start at: **[http://localhost:5173](http://localhost:5173)**
 
 ### 4. Environment Variables
 
-Create a `.env` file inside the **frontend** folder.
+Create a `.env.local` file inside the **frontend** folder.
 For teamwork, commit only `.env.template` and add `.env` to `.gitignore`.
 
 📄 **`.env.template`**
