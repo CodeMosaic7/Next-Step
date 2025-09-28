@@ -1,5 +1,5 @@
 venv/
-.env
+# .env
 
 # Node / Vite (React frontend)
 
@@ -13,7 +13,7 @@ yarn-error.log*
 pnpm-debug.log*
 
 # Local environment files
-.env
+# .env
 .env.local
 .env.development.local
 .env.test.local
