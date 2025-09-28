@@ -14,13 +14,7 @@ export async function getProtectedData(token) {
 
   return await response.json();
 }
-export async function checkRegistrationStatus(token) {
-  const response = await axios.get(`${API_BASE}/check-registration`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-}
+
 export async function registerStudent (token,registrationData) {
   const response = await axios.post(`${API_BASE}/registration`, registrationData, {
         headers: {
@@ -36,3 +30,15 @@ export async function registerStudent (token,registrationData) {
   return await response.json();
 }
 
+export async function checkRegistrationStatus(token){
+  const response = await axios.get(`${API_BASE}/check-registration`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (!response.ok) {
+    throw new Error("Failed to check registration status");
+  }
+  console.log("Registration status response:", response);
+  return await response.json();
+}
