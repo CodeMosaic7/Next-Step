@@ -42,3 +42,18 @@ export async function checkRegistrationStatus(token){
   console.log("Registration status response:", response);
   return await response.json();
 }
+
+export async function loginUser(token) {
+  const response = await axios.get(`${API_BASE}/protected`, {
+        headers: { 
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        withCredentials: false,
+        timeout: 10000,
+      });
+  if (!response.ok) {
+    throw new Error("Failed to login");
+  }
+  return await response.json();
+}

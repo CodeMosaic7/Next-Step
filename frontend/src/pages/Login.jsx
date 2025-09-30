@@ -4,6 +4,7 @@ import {
   useLocation,
   } from 'react-router-dom';
 import Footer from '../components/Footer';
+import { loginUser } from '../api';
 // 1. Auth Context
 const AuthContext = createContext();
 
@@ -170,13 +171,7 @@ export const Login = () => {
       const token = await auth.currentUser.getIdToken();
       
       // Test protected endpoint to get user registration status
-      const response = await axios.get(`${API_BASE_URL}/protected`, {
-        headers: { 
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        timeout: 10000,
-      });
+      const response = loginUser(token);
       
       console.log("Backend Response:", response.data);
       
