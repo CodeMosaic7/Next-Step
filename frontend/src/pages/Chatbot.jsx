@@ -240,7 +240,7 @@ const ChatInterface = () => {
       };
 
       const response = await axios.post(
-        `${API_BASE_URL}/api/v1/agent/interact`,
+        `${API_BASE_URL}/api/v1/assessment/process`,
         requestData,
         {
           headers: {
