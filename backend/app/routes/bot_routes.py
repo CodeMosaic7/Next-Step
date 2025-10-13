@@ -35,9 +35,7 @@ from app.auth.dependencies import get_current_user  # Assuming you have auth
 router = APIRouter(prefix="/api/v1", tags=["AI Agents & Coordination"])
 security = HTTPBearer()
 
-# ============================================================================
 # ASSESSMENT AND COORDINATION ROUTES
-# ============================================================================
 
 @router.post("/assessment/process", response_model=CoordinatorResponse)
 async def process_assessment_report(

@@ -1,7 +1,7 @@
+import axios from "axios";
 import { useState, useEffect, useRef } from 'react';
 import { Send, Facebook, Twitter, Instagram, Linkedin, Youtube, Bot, User, Loader } from 'lucide-react';
-import { auth } from "../firebase";
-import axios from "axios";
+
 import Header from "../components/Header.jsx"
 import Footer from '../components/Footer.jsx';
 
