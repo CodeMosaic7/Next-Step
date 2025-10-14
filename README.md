@@ -1,13 +1,13 @@
 ---
 
-# Personalized AI Career and Skills Advisor 🎯
+# Personalized AI Career and Skills Advisor 
 
 An AI-powered platform that helps students in India discover personalized career paths, map their skills, and prepare for the fast-evolving job market.
 Built using **Google Cloud’s Generative AI**, **FastAPI**, **React**, and modern web technologies.
 
 ---
 
-## 🚀 Overview
+##  Overview
 
 Students today face overwhelming career choices, often without personalized guidance. Traditional career counseling struggles to keep up with emerging roles and industry-required skills.
 
@@ -19,33 +19,33 @@ This project solves that by leveraging **Generative AI + Data-driven Skill Mappi
 
 ---
 
-## ✨ Features
+## Features
 
 ### Core Features
 
-* 🔍 **Student Profiling**: Intake via quizzes, psychometric tests, or academic data.
-* 🎯 **Personalized Career Recommendations** powered by Google Generative AI.
-* 📊 **Skill Gap Analysis** comparing student’s current skills vs. industry needs.
-* 🛠 **Learning Roadmaps** with curated resources (courses, projects, certifications).
-* 🔗 **Job Role & Industry Insights** (salary trends, demand forecasts, growth rate).
+*  **Student Profiling**: Intake via quizzes, psychometric tests, or academic data.
+*  **Personalized Career Recommendations** powered by Google Generative AI.
+*  **Skill Gap Analysis** comparing student’s current skills vs. industry needs.
+*  **Learning Roadmaps** with curated resources (courses, projects, certifications).
+*  **Job Role & Industry Insights** (salary trends, demand forecasts, growth rate).
 
 ### Advanced Features
 
-* 🤖 **AI Chatbot Mentor** for career queries and skill guidance.
-* 📅 **Career Planner Dashboard** with short-term & long-term goals.
-* 🔍 **Internship & Job Suggestions** (via APIs like LinkedIn Jobs, Internshala).
-* 📈 **Progress Tracking & Reports** (skills learned, certifications completed).
-* 🌐 **Multilingual Support** for accessibility across India.
+*  **AI Chatbot Mentor** for career queries and skill guidance.
+*  **Career Planner Dashboard** with short-term & long-term goals.
+*  **Internship & Job Suggestions** (via APIs like LinkedIn Jobs, Internshala).
+*  **Progress Tracking & Reports** (skills learned, certifications completed).
+*  **Multilingual Support** for accessibility across India.
 
 ### Future Enhancements
 
-* 🎓 **Alumni & Mentor Connect** – AI-powered mentor matching.
-* 🧭 **AI-Powered Roadmap Adjustments** as markets evolve.
-* 🛡 **Privacy-first Design** ensuring secure student data storage.
+*  **Alumni & Mentor Connect** – AI-powered mentor matching.
+*  **AI-Powered Roadmap Adjustments** as markets evolve.
+*  **Privacy-first Design** ensuring secure student data storage.
 
 ---
 
-## 🏗 Tech Stack
+##  Tech Stack
 
 ### Frontend
 
@@ -76,7 +76,7 @@ This project solves that by leveraging **Generative AI + Data-driven Skill Mappi
 
 ---
 
-## ⚙️ Installation & Setup
+##  Installation & Setup
 
 ### 1. Clone the repository
 
@@ -120,11 +120,11 @@ Frontend will start at: **[http://localhost:5173](http://localhost:5173)**
 Create a `.env.local` file inside the **frontend** folder.
 For teamwork, commit only `.env.template` and add `.env` to `.gitignore`.
 
-📄 **`.env.template`**
+ **`.env.template`**
 
 ```env
 # ================================
-# 🔥 Firebase Config
+#  Firebase Config
 # ================================
 VITE_FIREBASE_API_KEY=your_firebase_api_key
 VITE_FIREBASE_AUTH_DOMAIN=your_project_id.firebaseapp.com
@@ -135,13 +135,13 @@ VITE_FIREBASE_APP_ID=your_app_id
 VITE_FIREBASE_MEASUREMENT_ID=your_measurement_id
 
 # ================================
-# 🌐 Backend API
+#  Backend API
 # ================================
 BACKEND_URL=http://localhost:8000   # for local dev
 # BACKEND_URL=https://your-backend.onrender.com  # for production
 
 # ================================
-# 🤖 Google Cloud / Vertex AI
+#  Google Cloud / Vertex AI
 # ================================
 GOOGLE_PROJECT_ID=your_google_project_id
 GOOGLE_VERTEX_LOCATION=us-central1
@@ -150,7 +150,7 @@ GOOGLE_API_KEY=your_google_api_key   # or service account via backend
 
 ---
 
-## 🏛 System Architecture
+##  System Architecture
 
 ```bash
 Frontend (React + Vite)  <-->  Backend (FastAPI)  <-->  AI Layer (Google Vertex AI)
@@ -161,7 +161,7 @@ Frontend (React + Vite)  <-->  Backend (FastAPI)  <-->  AI Layer (Google Vertex 
 
 ---
 
-## 🚦 Agile Development Workflow
+##  Agile Development Workflow
 
 1. Requirement Gathering & SRS
 2. System Design & Architecture
@@ -172,7 +172,7 @@ Frontend (React + Vite)  <-->  Backend (FastAPI)  <-->  AI Layer (Google Vertex 
 
 ---
 
-## 📌 Roadmap
+##  Roadmap
 
 1. Define problem & requirements
 2. Create system architecture & SRS
@@ -185,7 +185,7 @@ Frontend (React + Vite)  <-->  Backend (FastAPI)  <-->  AI Layer (Google Vertex 
 
 ---
 
-## 🤝 Contributing
+##  Contributing
 
 Contributions are welcome!
 
