@@ -22,19 +22,19 @@ const TestimonialsSection = () => {
   ];
 
   return (
-    <section className="py-16 bg-white">
-      <div className="max-w-7xl mx-auto px-4">
-        <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
-          Hear From Our Community
-        </h2>
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {testimonials.map((testimonial, index) => (
-            <TestimonialCard key={index} {...testimonial} />
-          ))}
-        </div>
-      </div>
-    </section>
+    <section className="py-16 bg-gradient-to-b from-white to-gray-100">
+  <div className="max-w-7xl mx-auto px-4">
+    <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
+      Hear From Our Community
+    </h2>
+    
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 shadow-lg">
+      {testimonials.map((testimonial, index) => (
+        <TestimonialCard key={index} {...testimonial} />
+      ))}
+    </div>
+  </div>
+</section>
   );
 };
 
