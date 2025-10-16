@@ -1,7 +1,7 @@
 
 const HeroSection = () => {
   return (
-    <section className="relative bg-gradient-to-br from-blue-50 to-white py-20 overflow-hidden">
+    <section className="relative bg-gradient-to-br from-blue-50 to-white pt-40 pb-40 overflow-hidden ">
       {/* Background decorative elements */}
       <div className="absolute top-10 left-10 w-32 h-32 bg-blue-500 rounded-full opacity-20 blur-xl"></div>
       <div className="absolute top-20 right-20 w-20 h-20 bg-blue-600 rounded-full opacity-30"></div>

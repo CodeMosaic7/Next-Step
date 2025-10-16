@@ -13,8 +13,7 @@ const Header = () => {
             <div className="flex items-center">
               <span className="text-2xl font-bold text-blue-600">✱ NextStep</span>
             </div>
-            
-            {/* Navigation */}
+              {/* Navigation */}
             <nav className="hidden md:flex space-x-8">
               <a href="/#" className="text-gray-700 hover:text-blue-600 px-3 py-2">Home</a>
               <a href="/Assessment" className="text-blue-600 font-medium px-3 py-2">Assessment</a>
