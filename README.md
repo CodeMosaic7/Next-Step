@@ -1,13 +1,13 @@
 ---
 
-# Personalized AI Career and Skills Advisor 🎯
+# NEXT-STEP: A Personalised Learning Platform
 
 An AI-powered platform that helps students in India discover personalized career paths, map their skills, and prepare for the fast-evolving job market.
 Built using **Google Cloud’s Generative AI**, **FastAPI**, **React**, and modern web technologies.
 
 ---
 
-## 🚀 Overview
+##  Overview
 
 Students today face overwhelming career choices, often without personalized guidance. Traditional career counseling struggles to keep up with emerging roles and industry-required skills.
 
@@ -19,33 +19,33 @@ This project solves that by leveraging **Generative AI + Data-driven Skill Mappi
 
 ---
 
-## ✨ Features
+##  Features
 
 ### Core Features
 
-* 🔍 **Student Profiling**: Intake via quizzes, psychometric tests, or academic data.
-* 🎯 **Personalized Career Recommendations** powered by Google Generative AI.
-* 📊 **Skill Gap Analysis** comparing student’s current skills vs. industry needs.
-* 🛠 **Learning Roadmaps** with curated resources (courses, projects, certifications).
-* 🔗 **Job Role & Industry Insights** (salary trends, demand forecasts, growth rate).
+*  **Student Profiling**: Intake via quizzes, psychometric tests, or academic data.
+*  **Personalized Career Recommendations** powered by Google Generative AI.
+*  **Skill Gap Analysis** comparing student’s current skills vs. industry needs.
+*  **Learning Roadmaps** with curated resources (courses, projects, certifications).
+*  **Job Role & Industry Insights** (salary trends, demand forecasts, growth rate).
 
 ### Advanced Features
 
-* 🤖 **AI Chatbot Mentor** for career queries and skill guidance.
-* 📅 **Career Planner Dashboard** with short-term & long-term goals.
-* 🔍 **Internship & Job Suggestions** (via APIs like LinkedIn Jobs, Internshala).
-* 📈 **Progress Tracking & Reports** (skills learned, certifications completed).
-* 🌐 **Multilingual Support** for accessibility across India.
+*  **AI Chatbot Mentor** for career queries and skill guidance.
+*  **Career Planner Dashboard** with short-term & long-term goals.
+*  **Internship & Job Suggestions** (via APIs like LinkedIn Jobs, Internshala).
+*  **Progress Tracking & Reports** (skills learned, certifications completed).
+*  **Multilingual Support** for accessibility across India.
 
 ### Future Enhancements
 
-* 🎓 **Alumni & Mentor Connect** – AI-powered mentor matching.
-* 🧭 **AI-Powered Roadmap Adjustments** as markets evolve.
-* 🛡 **Privacy-first Design** ensuring secure student data storage.
+*  **Alumni & Mentor Connect** – AI-powered mentor matching.
+*  **AI-Powered Roadmap Adjustments** as markets evolve.
+*  **Privacy-first Design** ensuring secure student data storage.
 
 ---
 
-## 🏗 Tech Stack
+##  Tech Stack
 
 ### Frontend
 
@@ -76,7 +76,7 @@ This project solves that by leveraging **Generative AI + Data-driven Skill Mappi
 
 ---
 
-## ⚙️ Installation & Setup
+##  Installation & Setup
 
 ### 1. Clone the repository
 
