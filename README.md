@@ -1,6 +1,6 @@
 ---
 
-# NEXT-STEP: A Personalised Learning Platform
+# NEXT-STEP
 
 An AI-powered platform that helps students in India discover personalized career paths, map their skills, and prepare for the fast-evolving job market.
 Built using **Google Cloud’s Generative AI**, **FastAPI**, **React**, and modern web technologies.

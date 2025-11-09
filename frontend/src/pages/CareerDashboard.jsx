@@ -136,6 +136,7 @@ const CareerDashboard = () => {
           ))}
         </div>
       </main>
+      <Footer />
     </div>
   );
 };

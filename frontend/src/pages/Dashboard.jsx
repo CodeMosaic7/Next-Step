@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { auth } from "../firebase";
 import axios from "axios";
-
+import Footer from "../components/Footer";
 const Dashboard = () => {
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -780,6 +780,7 @@ const ProfileForm = ({ onClose, onSuccess }) => {
           </form>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };
